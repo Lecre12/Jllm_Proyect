@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 public class FileTreat {
     
-    private Path fileLocation = Paths.get("C:\\MLibre\\rememberLastConversation.csv");
+    private Path fileLocation = Paths.get(System.getProperty("user.home"), "Desktop", "JLLM\\rememberLastConversation.csv");
     
     public FileTreat(){
         
@@ -34,9 +34,11 @@ public class FileTreat {
     public void writeRememberLastConversation(Conversation conv) throws IOException{
         
         File csvFile = fileLocation.toFile();
-        if(!csvFile.exists()){
-            csvFile.createNewFile();
-        }
+        
+        if(csvFile.createNewFile()){
+            System.out.println(csvFile+" File Created");
+        }else System.out.println("File "+csvFile+" already exists");
+        
         
         
         try(FileWriter fileWriter = new FileWriter(fileLocation.toFile(), true);

@@ -6,7 +6,9 @@ package jllmproyectadrian.view;
 
 import java.io.IOException;
 import static java.lang.Math.random;
+import java.util.ArrayList;
 import jllmproyectadrian.controler.Controller;
+import jllmproyectadrian.model.Conversation;
 import jllmproyectadrian.model.FileTreat;
 import static jllmproyectadrian.util.MessageUtils.readMessageScan;
 import jllmproyectadrian.util.messages.RandomMessage;
@@ -78,6 +80,19 @@ public class View {
                         createConversation();
                         break;
                     case "2":
+                        FileTreat fileTreat = new FileTreat();
+                        System.out.println(fileTreat.getFileLocation());
+                        int tam = c.showLastConversation(fileTreat).size()/2;
+                        System.out.println(c.showLastConversation(fileTreat).get(0).getConversationDay() + "/" +
+                                                c.showLastConversation(fileTreat).get(0).getConversationMonth() + "/" + 
+                                                c.showLastConversation(fileTreat).get(0).getConversationYear());
+                        for(int i = 0; i < tam; i++){
+                            System.out.println("Mensaje: " + c.showLastConversation(fileTreat).get(i).getMessage());
+                            System.out.println("Respuesta: " + c.showLastConversation(fileTreat).get(i).getAnswer());
+                            c.createConversation(c.showLastConversation(fileTreat).get(i).getMessage(), c.showLastConversation(fileTreat).get(i).getAnswer());
+                        }
+                        
+                        createConversation();
                         break;
                     case "3":
                         break;
@@ -96,10 +111,10 @@ public class View {
         System.out.println("Dime algo ☺(\"exit\" para salir y volver al menu):");
         
         boolean exit = false;
-        int j = 0;
-        while(!exit){
-            
-            
+        FileTreat fileTreat = new FileTreat();
+        fileTreat.getFileLocation().toFile().delete();
+        
+        while(!exit){    
             String message = readMessageScan();
             if(message.toLowerCase().contains("hola")){
                 int salude = (int) (random() * 10);
@@ -113,25 +128,18 @@ public class View {
                 System.out.println(rm.getRandomJoke(joke));
                 c.createConversation(message, rm.getRandomJoke(joke));    
             }else if(message.toLowerCase().contains("conversacion")){
-                FileTreat fileTreat = new FileTreat();
-                int tam = c.showLastConversation(fileTreat).size()/2;
-                for(int i = 0; i < tam; i++){
-                    System.out.println(c.showLastConversation(fileTreat).get(i).getMessage());
-                }
                 //System.out.println(c.showLastConversation(fileTreat).size());
-                continue;
-                
+                //continue;
             }else{
                 int index = (int) (random() * 10 + 10);
                 System.out.println(rm.getRandomMessage(index));
                 c.createConversation(message, rm.getRandomMessage(index));
             }
-            c.saveLastConversatio(c.readConversation().get(j));
-            j++;
         }
         
-        
+
+            c.writeConversationIn();
     }
     
-    
+   
 }

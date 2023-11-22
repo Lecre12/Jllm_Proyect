@@ -39,4 +39,9 @@ public class Controller {
         this.m.saveLastConversatio(conv);
     }
     
+    public void writeConversationIn() throws IOException{
+        for(Conversation conv : m.readConversation()){
+            saveLastConversatio(conv);
+        }
+    }
 }
