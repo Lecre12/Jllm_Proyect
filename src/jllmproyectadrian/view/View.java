@@ -40,10 +40,7 @@ public class View {
             }else{
                 switch(option){
                     case "1":
-                        createConversation();
-                        /*for(int i = 0; i < tam; i++){
-                            c.saveLastConversatio(c.readConversation().get(i));
-                        }*/
+                        option1Menu();
                         break;
                     case "2":
                         break;
@@ -57,6 +54,40 @@ public class View {
             }
             
         }
+        
+    }
+    
+    public void option1Menu() throws IOException{
+        
+        boolean exit = false;
+        String option;
+        
+        while(!exit){
+            System.out.println("Seleccione lo que quiere realizar en la opcion Fake_LLM:");
+            System.out.println("1. Nuevo chat Fake_LLM");
+            System.out.println("2. Restaurar ultima conversacion realizada");
+            System.out.println("3. Listar conversaciones anteriores");
+            System.out.println("Introduzca el numero que quiere o \"exit\" para salir");
+            
+            option = readMessageScan();
+            if(option.equalsIgnoreCase("exit")){
+                exit = true;
+            }else{
+                switch(option){
+                    case "1":
+                        createConversation();
+                        break;
+                    case "2":
+                        break;
+                    case "3":
+                        break;
+                    default:
+                        System.out.println("[ERROR] No se ha introducido ninguno de los tres números o exit...");
+                        break;
+                }
+            }
+        }
+        
         
     }
     
