@@ -7,6 +7,7 @@ package jllmproyectadrian.view;
 import java.io.IOException;
 import static java.lang.Math.random;
 import jllmproyectadrian.controler.Controller;
+import jllmproyectadrian.model.Conversation;
 import static jllmproyectadrian.util.MessageUtils.readMessageScan;
 import jllmproyectadrian.util.messages.RandomMessage;
 import jllmproyectadrian.util.messages.Saludes;
@@ -81,17 +82,14 @@ public class View {
                         createConversation();
                         break;
                     case "2":
-                        int tam = c.showLastConversation().size();
-                        System.out.println(c.showLastConversation().get(0).getConversationDay() + "/" +
-                                                c.showLastConversation().get(0).getConversationMonth() + "/" + 
-                                                c.showLastConversation().get(0).getConversationYear());
-                        for(int i = 0; i < tam; i++){
-                            System.out.println("Mensaje: " + c.showLastConversation().get(i).getMessage());
-                            System.out.println("Respuesta: " + c.showLastConversation().get(i).getAnswer());
-                            c.createConversation(c.showLastConversation().get(i).getMessage(), c.showLastConversation().get(i).getAnswer());
+                        for(Conversation conv : c.showLastConversation()){
+                            System.out.print("[Yo" + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
+                                                + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
+                            System.out.println(conv.getMessage());
+                            System.out.print("[PROGRAMA" + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
+                                                + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
+                            System.out.println(conv.getAnswer());
                         }
-                        
-                        createConversation();
                         break;
                     case "3":
                         break;

@@ -22,6 +22,13 @@ public class Date {
         
     }
     
+    public Date(String date, String time){
+        setDate(date);
+        setTime(time);
+        this.date = getDate();
+        this.time = getTime();
+    }
+    
     public int getDay(){
         return date.getDayOfMonth();
     }
@@ -44,6 +51,23 @@ public class Date {
     
     public int getSecond(){
         return time.getSecond();
+    }
+    
+    public void setDate(String date){
+        LocalDate localDate = LocalDate.parse(date);
+        this.date = localDate;
+    }
+    public LocalDate getDate(){
+        return this.date;
+    }
+    
+    public void setTime(String time){
+        LocalTime localTime = LocalTime.parse(time);
+        this.time = localTime;   
+    }
+    
+    public LocalTime getTime(){
+        return this.time;
     }
 
 }

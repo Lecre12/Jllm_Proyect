@@ -33,15 +33,17 @@ public class Model {
         return this.dataBase;
     }
     
-    public void saveLastConversatio(Conversation conv, DataBase database){
-        
+    public void saveLastConversatio(Conversation conv, DataBase database){ 
         dataBase.insertLastConversation(conv.getMessage(), conv.getAnswer(), conv.getDate());
-        
     }
     
-    public ArrayList<Conversation> showLastConversation(){
-        
-        return this.conversations;
+    public ArrayList<Conversation> rememberLastConversation(){
+        int maxId;
+        maxId = dataBase.getMaxId();
+        for(Conversation conv : dataBase.readLastConversation(maxId)){
+            conversations.add(conv);
+        }
+        return conversations;
     }
-    
+      
 }

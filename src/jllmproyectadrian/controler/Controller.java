@@ -25,11 +25,8 @@ public class Controller {
         return this.m.readConversation();
     }
     
-    public ArrayList<Conversation> showLastConversation(){
-        
-        //fileTreat.rememberLastConversation(m.readConversation());
-        
-        return m.showLastConversation();
+    public ArrayList<Conversation> showLastConversation(){        
+        return m.rememberLastConversation();
     }
     
     public void saveLastConversatio(Conversation conv){

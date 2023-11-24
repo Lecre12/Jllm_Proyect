@@ -15,6 +15,12 @@ public class Conversation {
         this.date = date;
     }
     
+    public Conversation(String message, String answer, String date, String time){
+        this.message = message;
+        this.answer = answer;
+        setDate(date, time);
+    }
+    
     public Conversation(){
         
     }
@@ -63,8 +69,10 @@ public class Conversation {
         return this.date;
     }
     
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate(String date, String time) {
+        
+        Date pastDate = new Date(date, time);
+        this.date = pastDate;
     }
     
     
