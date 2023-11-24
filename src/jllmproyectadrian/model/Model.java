@@ -11,6 +11,7 @@ import java.util.ArrayList;
  * @author adria
  */
 public class Model {
+    DataBase dataBase;
     ArrayList <Conversation> conversations = new ArrayList <Conversation>();
     
     public void createConversation(String message, String answer, Date date){
@@ -23,21 +24,24 @@ public class Model {
     public ArrayList <Conversation> readConversation(){
         return this.conversations;
     }
-
-    public void saveLastConversatio(Conversation conv) throws IOException{
-        //Meter conversacion en una archivo de texto o como sea para poder guardar la conversacion anterior.
-        FileTreat fileTreat = new FileTreat();
-        fileTreat.writeRememberLastConversation(conv);
+    
+    public void initDataBase(){
+        dataBase = new DataBase(); 
+    }
+    
+    public DataBase getDataBase(){
+        return this.dataBase;
+    }
+    
+    public void saveLastConversatio(Conversation conv, DataBase database){
+        
+        dataBase.insertLastConversation(conv.getMessage(), conv.getAnswer(), conv.getDate());
         
     }
     
     public ArrayList<Conversation> showLastConversation(){
         
-        FileTreat fileTreat;
-        fileTreat = new FileTreat();
-        fileTreat.rememberLastConversation(this.conversations);
-
-        return conversations;
+        return this.conversations;
     }
     
 }

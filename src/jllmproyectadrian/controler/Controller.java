@@ -4,11 +4,9 @@
  */
 package jllmproyectadrian.controler;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import jllmproyectadrian.model.Conversation;
 import jllmproyectadrian.model.Date;
-import jllmproyectadrian.model.FileTreat;
 import jllmproyectadrian.model.Model;
 
 /**
@@ -27,21 +25,23 @@ public class Controller {
         return this.m.readConversation();
     }
     
-    public ArrayList<Conversation> showLastConversation(FileTreat fileTreat){
+    public ArrayList<Conversation> showLastConversation(){
         
-        Conversation conv = new Conversation();
-        fileTreat.rememberLastConversation(m.readConversation());
+        //fileTreat.rememberLastConversation(m.readConversation());
         
         return m.showLastConversation();
     }
     
-    public void saveLastConversatio(Conversation conv) throws IOException{
-        this.m.saveLastConversatio(conv);
+    public void saveLastConversatio(Conversation conv){
+        this.m.saveLastConversatio(conv, m.getDataBase());
     }
     
-    public void writeConversationIn() throws IOException{
-        for(Conversation conv : m.readConversation()){
-            saveLastConversatio(conv);
-        }
+    public Conversation getLastConversation(){
+        return this.m.readConversation().get(m.readConversation().size() - 1);
     }
+    
+    public void initDataBase(){
+        m.initDataBase();
+    }
+    
 }

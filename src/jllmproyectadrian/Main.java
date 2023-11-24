@@ -12,6 +12,7 @@ public class Main {
         
         View view = new View();
         
+        view.initDataBase();
         view.principalMenu();
         
     }

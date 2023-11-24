@@ -6,10 +6,7 @@ package jllmproyectadrian.view;
 
 import java.io.IOException;
 import static java.lang.Math.random;
-import java.util.ArrayList;
 import jllmproyectadrian.controler.Controller;
-import jllmproyectadrian.model.Conversation;
-import jllmproyectadrian.model.FileTreat;
 import static jllmproyectadrian.util.MessageUtils.readMessageScan;
 import jllmproyectadrian.util.messages.RandomMessage;
 import jllmproyectadrian.util.messages.Saludes;
@@ -22,6 +19,10 @@ public class View {
     Controller c = new Controller();
     Saludes s = new Saludes();
     RandomMessage rm = new RandomMessage();
+    
+    public void initDataBase(){
+        c.initDataBase();
+    }
     
     public void principalMenu() throws IOException{
         
@@ -80,16 +81,14 @@ public class View {
                         createConversation();
                         break;
                     case "2":
-                        FileTreat fileTreat = new FileTreat();
-                        System.out.println(fileTreat.getFileLocation());
-                        int tam = c.showLastConversation(fileTreat).size()/2;
-                        System.out.println(c.showLastConversation(fileTreat).get(0).getConversationDay() + "/" +
-                                                c.showLastConversation(fileTreat).get(0).getConversationMonth() + "/" + 
-                                                c.showLastConversation(fileTreat).get(0).getConversationYear());
+                        int tam = c.showLastConversation().size();
+                        System.out.println(c.showLastConversation().get(0).getConversationDay() + "/" +
+                                                c.showLastConversation().get(0).getConversationMonth() + "/" + 
+                                                c.showLastConversation().get(0).getConversationYear());
                         for(int i = 0; i < tam; i++){
-                            System.out.println("Mensaje: " + c.showLastConversation(fileTreat).get(i).getMessage());
-                            System.out.println("Respuesta: " + c.showLastConversation(fileTreat).get(i).getAnswer());
-                            c.createConversation(c.showLastConversation(fileTreat).get(i).getMessage(), c.showLastConversation(fileTreat).get(i).getAnswer());
+                            System.out.println("Mensaje: " + c.showLastConversation().get(i).getMessage());
+                            System.out.println("Respuesta: " + c.showLastConversation().get(i).getAnswer());
+                            c.createConversation(c.showLastConversation().get(i).getMessage(), c.showLastConversation().get(i).getAnswer());
                         }
                         
                         createConversation();
@@ -111,8 +110,7 @@ public class View {
         System.out.println("Dime algo ☺(\"exit\" para salir y volver al menu):");
         
         boolean exit = false;
-        FileTreat fileTreat = new FileTreat();
-        fileTreat.getFileLocation().toFile().delete();
+        int i = 0;
         
         while(!exit){    
             String message = readMessageScan();
@@ -135,10 +133,10 @@ public class View {
                 System.out.println(rm.getRandomMessage(index));
                 c.createConversation(message, rm.getRandomMessage(index));
             }
+            c.saveLastConversatio(c.getLastConversation());
+            i++;
         }
         
-
-            c.writeConversationIn();
     }
     
    

@@ -59,6 +59,10 @@ public class Conversation {
         this.answer = answer;
     }
 
+    public Date getDate(){
+        return this.date;
+    }
+    
     public void setDate(Date date) {
         this.date = date;
     }
