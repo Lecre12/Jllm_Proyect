@@ -62,4 +62,8 @@ public class Controller {
         return m.getTablesNames();
     }
     
+    public String getFirstMessage(String table){
+        return m.getFirstMessage(table);
+    }
+    
 }

@@ -186,7 +186,8 @@ public class View {
         int i = 1;
         for(String tableName : c.getTablesNames()){
             System.out.println(i + ". " + tableName + " | Numero de mensajes: "
-                    + c.getDatabase().getMaxId(tableName)+ " | ");
+                    + c.getDatabase().getMaxId(tableName) + " | " 
+                    + c.getDatabase().getFirstMessage(tableName).substring(0, Math.min(c.getDatabase().getFirstMessage(tableName).length(), 20)));
             i++;
         }  
     }

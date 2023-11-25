@@ -227,4 +227,30 @@ public class DataBase {
         
     }
     
+    public String getFirstMessage(String table){
+        
+        String message = null;
+        ResultSet rs = null;
+        try {
+            Statement stmt1 = connection.createStatement();
+            rs = stmt1.executeQuery("SELECT message FROM "+ table +" WHERE id=1;");
+            if(rs.next()){
+                message = rs.getString("message");
+            }
+            
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally{
+            if(rs != null){
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        
+        return message;
+    }
+    
 }

@@ -63,5 +63,9 @@ public class Model {
     public ArrayList<String> getTablesNames(){
         return dataBase.getAllTablesNames();
     }
+    
+    public String getFirstMessage(String table){
+        return dataBase.getFirstMessage(table);
+    }
       
 }
