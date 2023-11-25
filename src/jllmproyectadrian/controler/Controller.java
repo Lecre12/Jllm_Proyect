@@ -6,6 +6,7 @@ package jllmproyectadrian.controler;
 
 import java.util.ArrayList;
 import jllmproyectadrian.model.Conversation;
+import jllmproyectadrian.model.DataBase;
 import jllmproyectadrian.model.Date;
 import jllmproyectadrian.model.Model;
 
@@ -39,6 +40,10 @@ public class Controller {
     
     public void initDataBase(){
         m.initDataBase();
+    }
+    
+    public DataBase getDatabase(){
+        return m.getDataBase();
     }
     
 }

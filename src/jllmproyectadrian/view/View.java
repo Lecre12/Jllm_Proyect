@@ -90,6 +90,7 @@ public class View {
                                                 + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
                             System.out.println(conv.getAnswer());
                         }
+                        continueConversation();
                         break;
                     case "3":
                         break;
@@ -103,8 +104,9 @@ public class View {
         
     }
     
-    public void createConversation() throws IOException{
+    public void createConversation(){
         
+        c.getDatabase().deleteLastConversation();
         System.out.println("Dime algo ☺(\"exit\" para salir y volver al menu):");
         
         boolean exit = false;
@@ -135,6 +137,38 @@ public class View {
             i++;
         }
         
+    }
+    
+    public void continueConversation(){
+        
+        System.out.println("Continuemos por donde lo dejamos ☺(\"exit\" para salir y volver al menu):");
+        boolean exit = false;
+        int i = 0;
+        
+        while(!exit){    
+            String message = readMessageScan();
+            if(message.toLowerCase().contains("hola")){
+                int salude = (int) (random() * 10);
+                System.out.println(s.getSalude(salude));
+                c.createConversation(message,s.getSalude(salude));
+            }else if(message.equalsIgnoreCase("exit")){
+                exit = true;
+                continue;
+            }else if(message.toLowerCase().contains("chiste")){
+                int joke = (int) (random() * 10);
+                System.out.println(rm.getRandomJoke(joke));
+                c.createConversation(message, rm.getRandomJoke(joke));    
+            }else if(message.toLowerCase().contains("conversacion")){
+                //System.out.println(c.showLastConversation(fileTreat).size());
+                //continue;
+            }else{
+                int index = (int) (random() * 10 + 10);
+                System.out.println(rm.getRandomMessage(index));
+                c.createConversation(message, rm.getRandomMessage(index));
+            }
+            c.saveLastConversatio(c.getLastConversation());
+            i++;
+        }
     }
     
    

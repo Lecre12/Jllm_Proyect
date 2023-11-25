@@ -95,4 +95,17 @@ public class DataBase {
         return id;
     }
     
+    public void deleteLastConversation(){
+        try { 
+            PreparedStatement  stmt = connection.prepareStatement("DROP TABLE lastConversation");
+            stmt.execute();
+            Statement stmt1 = connection.createStatement();
+            stmt1.execute("CREATE TABLE IF NOT EXISTS lastConversation(message VARCHAR(100) NOT NULL, answer VARCHAR(100) NOT NULL, date VARCHAR(10) NOT NULL, time VARCHAR(10) NOT NULL, id INT NOT NULL, PRIMARY KEY(id, date, time));");
+            
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        
+    }
+    
 }

@@ -37,6 +37,10 @@ public class Model {
         dataBase.insertLastConversation(conv.getMessage(), conv.getAnswer(), conv.getDate());
     }
     
+    public void deleteLastConversation(){
+        dataBase.deleteLastConversation();
+    }
+    
     public ArrayList<Conversation> rememberLastConversation(){
         int maxId;
         maxId = dataBase.getMaxId();
