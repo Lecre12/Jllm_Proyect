@@ -40,9 +40,7 @@ public class Model {
     public ArrayList<Conversation> rememberLastConversation(){
         int maxId;
         maxId = dataBase.getMaxId();
-        for(Conversation conv : dataBase.readLastConversation(maxId)){
-            conversations.add(conv);
-        }
+        this.conversations = dataBase.readLastConversation(maxId);
         return conversations;
     }
       

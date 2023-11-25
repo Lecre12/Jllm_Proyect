@@ -29,7 +29,7 @@ public class DataBase {
         /*Create tables lastConversation if nor exists*/
         try {
             Statement stmt = connection.createStatement();
-            stmt.execute("CREATE TABLE IF NOT EXISTS lastConversation(message VARCHAR(100) NOT NULL, answer VARCHAR(100) NOT NULL, date TEXT NOT NULL, time TEXT NOT NULL, id INT NOT NULL, PRIMARY KEY(id, date));");
+            stmt.execute("CREATE TABLE IF NOT EXISTS lastConversation(message VARCHAR(100) NOT NULL, answer VARCHAR(100) NOT NULL, date VARCHAR(10) NOT NULL, time VARCHAR(10) NOT NULL, id INT NOT NULL, PRIMARY KEY(id, date, time));");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -41,7 +41,7 @@ public class DataBase {
         try(PreparedStatement stmt = connection.prepareStatement("INSERT INTO lastConversation(message, answer, date, time, id)VALUES(?,?,?,?,?);");) { 
             stmt.setString(1, message);
             stmt.setString(2, answer);
-            stmt.setString(3, date.getDay() + "-" + date.getMonth() + "-" + date.getYear());
+            stmt.setString(3, date.getYear() + "-" + date.getMonth() + "-" + date.getDay());
             stmt.setString(4, date.getHour() + ":" + date.getMinute() + ":" + date.getSecond());
             stmt.setInt(5, getMaxId() + 1);
             stmt.executeUpdate();
@@ -53,35 +53,29 @@ public class DataBase {
     public ArrayList <Conversation> readLastConversation(int maxId){
         
         ArrayList <Conversation> conversations = new ArrayList<>();
-        var conver = new Conversation();
         ResultSet rs = null;
-        int id = 0;
         String date, time;
-
-        for(int i = 0; i < maxId; i++){
+        
+        for(int i = 1; i <= maxId; i++){
             try { 
                 PreparedStatement  stmt = connection.prepareStatement("SELECT * FROM lastConversation WHERE id = ?");
-                stmt.setInt(1, id);
+                stmt.setInt(1, i);
                 rs = stmt.executeQuery();
                 if(rs.next()){
+                    Conversation conver = new Conversation();
                     conver.setMessage(rs.getString("message"));
-                    System.out.println("H1");
-                    conver.setMessage(rs.getString("answer"));
-                    System.out.println("H2");
+                    conver.setAnswer(rs.getString("answer"));
                     date = rs.getString("date");
-                    System.out.println("H3");
                     time = rs.getString("time");
-                    System.out.println("H4");
-                    id = rs.getInt("id") + 1;
-                    System.out.println("H5");
-                    conver.setDate(date, time);
-                    
+                    conver.setDate(date, time); 
+                    conversations.add(conver);
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            conversations.add(conver);
+            
         }
+        
         return conversations;
     }
     
