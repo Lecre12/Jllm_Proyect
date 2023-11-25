@@ -41,11 +41,23 @@ public class Model {
         dataBase.deleteLastConversation();
     }
     
+    public void saveConversationAsDay(){
+        dataBase.saveConversationAsDay(this.conversations);
+    }
+    
+    public void continueConversationAsDay(String table){
+        dataBase.continueConversationAsDay(table, this.conversations);
+    }
+    
     public ArrayList<Conversation> rememberLastConversation(){
         int maxId;
         maxId = dataBase.getMaxId();
         this.conversations = dataBase.readLastConversation(maxId);
         return conversations;
+    }
+    
+    public ArrayList<String> getTablesNames(){
+        return dataBase.getAllTablesNames();
     }
       
 }

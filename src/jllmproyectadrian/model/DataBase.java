@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.*;
 import java.sql.DriverManager;  
 import java.sql.SQLException; 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -106,6 +107,68 @@ public class DataBase {
             throw new RuntimeException(e);
         }
         
+    }
+    
+    public void saveConversationAsDay(ArrayList<Conversation> conversations){
+        
+        long epoch = System.currentTimeMillis()/1000;
+        String create = "CREATE TABLE t"+ epoch + "(message VARCHAR(100) NOT NULL, answer VARCHAR(100) NOT NULL, date VARCHAR(10) NOT NULL, time VARCHAR(10) NOT NULL, id INT NOT NULL, PRIMARY KEY(id, date, time));";
+        try {
+            Statement stmt1 = connection.createStatement();
+            stmt1.execute(create);
+            int i = 1;
+            for(Conversation conv : conversations){
+                try(PreparedStatement stmt = connection.prepareStatement("INSERT INTO t" + epoch + "(message, answer, date, time, id)VALUES(?,?,?,?,?);");) { 
+                    stmt.setString(1, conv.getMessage());
+                    stmt.setString(2, conv.getAnswer());
+                    stmt.setString(3, conv.getDate().getYear() + "-" + conv.getDate().getMonth() + "-" + conv.getDate().getDay());
+                    stmt.setString(4, conv.getDate().getHour() + ":" + conv.getDate().getMinute() + ":" + conv.getDate().getSecond());
+                    stmt.setInt(5, i);
+                    stmt.executeUpdate();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        
+    }
+    
+    public ArrayList<String> getAllTablesNames(){
+        
+        ArrayList<String> tableNames = new ArrayList<>();
+        ResultSet rs = null;
+        
+        try {
+            Statement stmt1 = connection.createStatement();
+            rs = stmt1.executeQuery("SELECT name FROM sqlite_master WHERE type = 'table' AND name!='lastConversation';");
+            while(rs.next()){
+                tableNames.add(rs.getString("name"));
+            }
+            
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return tableNames;
+    }
+    
+    public void continueConversationAsDay(String table, ArrayList<Conversation> conversations){
+        
+        for(Conversation conv : conversations){
+            try(PreparedStatement stmt = connection.prepareStatement("INSERT INTO " + table + "(message, answer, date, time, id)VALUES(?,?,?,?,?);");) { 
+                stmt.setString(1, conv.getMessage());
+                stmt.setString(2, conv.getAnswer());
+                stmt.setString(3, conv.getDate().getYear() + "-" + conv.getDate().getMonth() + "-" + conv.getDate().getDay());
+                stmt.setString(4, conv.getDate().getHour() + ":" + conv.getDate().getMinute() + ":" + conv.getDate().getSecond());
+                stmt.setInt(5, getMaxId() + 1);
+                stmt.executeUpdate();
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }  
     }
     
 }

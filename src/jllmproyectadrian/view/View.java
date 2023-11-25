@@ -90,9 +90,14 @@ public class View {
                                                 + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
                             System.out.println(conv.getAnswer());
                         }
-                        continueConversation();
+                        continueConversation(true, null);
                         break;
                     case "3":
+                        showAllConversations();
+                        int dev;
+                        do{
+                            dev = menuForDeleteTable();
+                        }while(dev == -1);
                         break;
                     default:
                         System.out.println("[ERROR] No se ha introducido ninguno de los tres números o exit...");
@@ -136,10 +141,11 @@ public class View {
             c.saveLastConversatio(c.getLastConversation());
             i++;
         }
+        c.saveConversationAsDay();
         
     }
     
-    public void continueConversation(){
+    public void continueConversation(boolean comeFromLast, String table){
         
         System.out.println("Continuemos por donde lo dejamos ☺(\"exit\" para salir y volver al menu):");
         boolean exit = false;
@@ -169,7 +175,49 @@ public class View {
             c.saveLastConversatio(c.getLastConversation());
             i++;
         }
+        if(!comeFromLast){
+            c.continueConversationAsDay(table);
+        }
+        
     }
     
+    public void showAllConversations(){
+        
+        int i = 1;
+        for(String tableName : c.getTablesNames()){
+            System.out.println(i + ". " + tableName + " | Numero de mensajes: "
+                    + c.getDatabase().getMaxId()+ " | ");
+            i++;
+        }  
+    }
+    
+    public int menuForDeleteTable(){
+        
+        String option = null, table = null;
+        System.out.println("Si desea borrar una conversacion ponga: \"numero conversacion delete\" (ejemplo: t1700917167 delete)");
+        System.out.println("Si desea restaurar una conversacion ponga \"numero conversacion restore\" (ejemplo t1700917167 restore)");
+        option = readMessageScan();
+        
+        if(option.toLowerCase().contains("exit")){
+            return 1;
+        }
+        
+        for(String tableName : c.getTablesNames()){
+            if(!(option.toLowerCase().contains(tableName) && (option.toLowerCase().contains("restore") || option.toLowerCase().contains("delete")))){
+                System.out.println("La tabla introducida no existe o no se ha escrito correctamente delete/restore");
+                return -1;
+            }else{
+                table = tableName;
+            }
+        }
+        if(option.toLowerCase().contains("restore")){
+            continueConversation(false, table);
+        }else{
+            //delete Table;
+        }
+        
+        
+        return 0;
+    }
    
 }

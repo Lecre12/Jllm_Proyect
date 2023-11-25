@@ -46,4 +46,16 @@ public class Controller {
         return m.getDataBase();
     }
     
+    public void saveConversationAsDay(){
+        m.saveConversationAsDay();
+    }
+    
+    public void continueConversationAsDay(String table){
+        m.continueConversationAsDay(table);
+    }
+    
+    public ArrayList<String> getTablesNames(){
+        return m.getTablesNames();
+    }
+    
 }
