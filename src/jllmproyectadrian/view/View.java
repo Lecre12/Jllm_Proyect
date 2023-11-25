@@ -82,6 +82,7 @@ public class View {
                         createConversation();
                         break;
                     case "2":
+                        System.out.println("Hola");
                         for(Conversation conv : c.showLastConversation()){
                             System.out.print("[Yo: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
                                                 + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
@@ -148,6 +149,14 @@ public class View {
     public void continueConversation(boolean comeFromLast, String table){
         
         System.out.println("Continuemos por donde lo dejamos ☺(\"exit\" para salir y volver al menu):");
+        /*for(Conversation conv : c.readSpecificConversation(table)){
+            System.out.print("[Yo: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
+                                + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
+            System.out.println(conv.getMessage());
+            System.out.print("[PROGRAMA: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
+                                + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
+            System.out.println(conv.getAnswer());
+        }*/
         boolean exit = false;
         int i = 0;
         
@@ -197,6 +206,7 @@ public class View {
         String option = null, table = null;
         System.out.println("Si desea borrar una conversacion ponga: \"numero conversacion delete\" (ejemplo: t1700917167 delete)");
         System.out.println("Si desea restaurar una conversacion ponga \"numero conversacion restore\" (ejemplo t1700917167 restore)");
+        System.out.println("Escriba \"exit\" para salir al menu");
         option = readMessageScan();
         boolean exists = false;
         if(option.toLowerCase().contains("exit")){

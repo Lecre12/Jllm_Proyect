@@ -75,13 +75,13 @@ public class DataBase {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }finally{
-                 if(rs != null){
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                if(rs != null){
+                    try {
+                        rs.close();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-            }
 
             }
             
@@ -158,6 +158,49 @@ public class DataBase {
             throw new RuntimeException(e);
         }
         
+        /*try(PreparedStatement stmt = connection.prepareStatement("INSERT INTO lastConversation(message, answer, date, time, id)SELECT message, answer, date, time, id FROM" + epoch + ";");) {
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }*/
+        
+    }
+    
+    public ArrayList<Conversation> readSpecificConversation(String table, int maxId){
+        
+        ArrayList<Conversation> conversations = new ArrayList<>();
+        ResultSet rs = null;
+        String date, time;
+        
+        for(int i = 1; i <= maxId; i++){
+            try { 
+                PreparedStatement  stmt = connection.prepareStatement("SELECT * FROM " + table + " WHERE id = ?");
+                stmt.setInt(1, i);
+                rs = stmt.executeQuery();
+                if(rs.next()){
+                    Conversation conver = new Conversation();
+                    conver.setMessage(rs.getString("message"));
+                    conver.setAnswer(rs.getString("answer"));
+                    date = rs.getString("date");
+                    time = rs.getString("time");
+                    conver.setDate(date, time); 
+                    conversations.add(conver);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }finally{
+                if(rs != null){
+                    try {
+                        rs.close();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+            }
+        }
+        
+        return conversations;
     }
     
     public ArrayList<String> getAllTablesNames(){

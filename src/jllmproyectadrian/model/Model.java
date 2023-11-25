@@ -67,5 +67,11 @@ public class Model {
     public String getFirstMessage(String table){
         return dataBase.getFirstMessage(table);
     }
+    
+    public ArrayList<Conversation> readSpecificConversation(String table){
+        int maxId = dataBase.getMaxId(table);
+        this.conversations = dataBase.readSpecificConversation(table, maxId);
+        return conversations;
+    }
       
 }

@@ -66,4 +66,8 @@ public class Controller {
         return m.getFirstMessage(table);
     }
     
+    public ArrayList<Conversation> readSpecificConversation(String table){
+        return m.readSpecificConversation(table);
+    }
+    
 }
