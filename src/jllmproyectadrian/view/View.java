@@ -186,7 +186,7 @@ public class View {
         int i = 1;
         for(String tableName : c.getTablesNames()){
             System.out.println(i + ". " + tableName + " | Numero de mensajes: "
-                    + c.getDatabase().getMaxId()+ " | ");
+                    + c.getDatabase().getMaxId(tableName)+ " | ");
             i++;
         }  
     }
@@ -197,23 +197,30 @@ public class View {
         System.out.println("Si desea borrar una conversacion ponga: \"numero conversacion delete\" (ejemplo: t1700917167 delete)");
         System.out.println("Si desea restaurar una conversacion ponga \"numero conversacion restore\" (ejemplo t1700917167 restore)");
         option = readMessageScan();
-        
+        boolean exists = false;
         if(option.toLowerCase().contains("exit")){
             return 1;
         }
         
         for(String tableName : c.getTablesNames()){
-            if(!(option.toLowerCase().contains(tableName) && (option.toLowerCase().contains("restore") || option.toLowerCase().contains("delete")))){
-                System.out.println("La tabla introducida no existe o no se ha escrito correctamente delete/restore");
-                return -1;
+            if(!option.toLowerCase().contains(tableName)){
             }else{
                 table = tableName;
+                exists = true;
             }
         }
+        if(exists){
+        } else {
+            System.out.println("La tabla introducida no existe o no se ha escrito correctamente delete/restore");
+            return -1;
+        }
+        
         if(option.toLowerCase().contains("restore")){
+            System.out.println("Tabla restaurada correctamente\n");
             continueConversation(false, table);
-        }else{
-            //delete Table;
+        }else if(option.toLowerCase().contains("delete")){
+            c.deleteTable(table);
+            System.out.println("Tabla borrada correctamente\n");
         }
         
         

@@ -49,9 +49,13 @@ public class Model {
         dataBase.continueConversationAsDay(table, this.conversations);
     }
     
+    public void deleteTable(String table){
+        dataBase.deleteTable(table);
+    }
+    
     public ArrayList<Conversation> rememberLastConversation(){
         int maxId;
-        maxId = dataBase.getMaxId();
+        maxId = dataBase.getMaxId("lastConversation");
         this.conversations = dataBase.readLastConversation(maxId);
         return conversations;
     }

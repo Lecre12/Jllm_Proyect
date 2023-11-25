@@ -9,8 +9,9 @@ import java.sql.Statement;
 import java.sql.*;
 import java.sql.DriverManager;  
 import java.sql.SQLException; 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author adria
@@ -44,7 +45,7 @@ public class DataBase {
             stmt.setString(2, answer);
             stmt.setString(3, date.getYear() + "-" + date.getMonth() + "-" + date.getDay());
             stmt.setString(4, date.getHour() + ":" + date.getMinute() + ":" + date.getSecond());
-            stmt.setInt(5, getMaxId() + 1);
+            stmt.setInt(5, getMaxId("lastConversation") + 1);
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -73,6 +74,15 @@ public class DataBase {
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
+            }finally{
+                 if(rs != null){
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
             }
             
         }
@@ -80,12 +90,12 @@ public class DataBase {
         return conversations;
     }
     
-    public int getMaxId(){
+    public int getMaxId(String table){
         ResultSet rs = null;
         int id = 0;
         //Get id
         try { 
-            PreparedStatement  stmt = connection.prepareStatement("SELECT MAX(id) AS ultima_id FROM lastConversation;");
+            PreparedStatement  stmt = connection.prepareStatement("SELECT MAX(id) AS ultima_id FROM " + table +";");
             rs = stmt.executeQuery();
             if(rs.next()){
                 id = rs.getInt("ultima_id");
@@ -97,11 +107,24 @@ public class DataBase {
     }
     
     public void deleteLastConversation(){
+        
+        try {
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBase.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            connection = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.home") + "\\Desktop\\JLLM\\conversations.db");
+            
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        
         try { 
             PreparedStatement  stmt = connection.prepareStatement("DROP TABLE lastConversation");
             stmt.execute();
             Statement stmt1 = connection.createStatement();
-            stmt1.execute("CREATE TABLE IF NOT EXISTS lastConversation(message VARCHAR(100) NOT NULL, answer VARCHAR(100) NOT NULL, date VARCHAR(10) NOT NULL, time VARCHAR(10) NOT NULL, id INT NOT NULL, PRIMARY KEY(id, date, time));");
+            stmt1.executeUpdate("CREATE TABLE IF NOT EXISTS lastConversation(message VARCHAR(100) NOT NULL, answer VARCHAR(100) NOT NULL, date VARCHAR(10) NOT NULL, time VARCHAR(10) NOT NULL, id INT NOT NULL, PRIMARY KEY(id, date, time));");
             
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -124,6 +147,7 @@ public class DataBase {
                     stmt.setString(3, conv.getDate().getYear() + "-" + conv.getDate().getMonth() + "-" + conv.getDate().getDay());
                     stmt.setString(4, conv.getDate().getHour() + ":" + conv.getDate().getMinute() + ":" + conv.getDate().getSecond());
                     stmt.setInt(5, i);
+                    i++;
                     stmt.executeUpdate();
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
@@ -150,6 +174,14 @@ public class DataBase {
             
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }finally{
+            if(rs != null){
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         return tableNames;
     }
@@ -162,13 +194,37 @@ public class DataBase {
                 stmt.setString(2, conv.getAnswer());
                 stmt.setString(3, conv.getDate().getYear() + "-" + conv.getDate().getMonth() + "-" + conv.getDate().getDay());
                 stmt.setString(4, conv.getDate().getHour() + ":" + conv.getDate().getMinute() + ":" + conv.getDate().getSecond());
-                stmt.setInt(5, getMaxId() + 1);
+                stmt.setInt(5, getMaxId(table) + 1);
                 stmt.executeUpdate();
 
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         }  
+    }
+    
+    public void deleteTable(String table){
+        
+        try {
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBase.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            connection = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.home") + "\\Desktop\\JLLM\\conversations.db");
+            
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        
+        try { 
+            PreparedStatement  stmt = connection.prepareStatement("DROP TABLE " + table);
+            stmt.executeUpdate();
+            
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        
     }
     
 }

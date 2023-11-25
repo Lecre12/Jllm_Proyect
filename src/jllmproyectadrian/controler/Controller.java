@@ -50,6 +50,10 @@ public class Controller {
         m.saveConversationAsDay();
     }
     
+    public void deleteTable(String table){
+        m.deleteTable(table);
+    }
+    
     public void continueConversationAsDay(String table){
         m.continueConversationAsDay(table);
     }
