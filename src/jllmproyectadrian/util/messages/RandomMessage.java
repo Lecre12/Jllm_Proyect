@@ -22,8 +22,8 @@ public class RandomMessage {
         
         this.messages.add("Aqui tienes un chiste. ¿Sabes como se despiden los quimicos?...Ácido un placer.");
         this.messages.add("¿Un chsite? Por supuesto.¿Cual es el animal mas antiguo?...La cebra, porque esta en blanco y negro.");
-        this.messages.add("Un chiste esta a punto de salir por pantalla...Un hombre entra en una libreria y pregunta, \"¿Tienen libros para el cansancio?\""
-                            + "Y el librero responde: \"Si, pero estan agotados\"");
+        this.messages.add("Un chiste esta a punto de salir por pantalla...Un hombre entra en una libreria y pregunta, -¿Tienen libros para el cansancio?"
+                            + "Y el librero responde: -Si, pero estan agotados");
         this.messages.add("¿Como se dice disparo en arabe?...Ahi-va-la-bala.");
         this.messages.add("¿Cual es el colmo de aladin?...Tener mal genio.");
         this.messages.add("Si se muere una pulga, a donde va?...Al pulgatorio.");
