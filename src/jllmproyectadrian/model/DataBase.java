@@ -22,8 +22,7 @@ public class DataBase {
     public DataBase(){
         
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.home") + "\\Desktop\\JLLM\\conversations.db");
-            
+            connection = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.home") + "\\Desktop\\JLLM\\conversations.db"); 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -43,8 +42,8 @@ public class DataBase {
         try(PreparedStatement stmt = connection.prepareStatement("INSERT INTO lastConversation(message, answer, date, time, id)VALUES(?,?,?,?,?);");) { 
             stmt.setString(1, message);
             stmt.setString(2, answer);
-            stmt.setString(3, date.getYear() + "-" + date.getMonth() + "-" + date.getDay());
-            stmt.setString(4, date.getHour() + ":" + date.getMinute() + ":" + date.getSecond());
+            stmt.setString(3, String.format("%02d", date.getYear()) + "-" + String.format("%02d", date.getMonth()) + "-" + String.format("%02d", date.getDay()));
+            stmt.setString(4, String.format("%02d", date.getHour()) + ":" + String.format("%02d", date.getMinute()) + ":" + String.format("%02d", date.getSecond()));
             stmt.setInt(5, getMaxId("lastConversation") + 1);
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -60,7 +59,7 @@ public class DataBase {
         
         for(int i = 1; i <= maxId; i++){
             try { 
-                PreparedStatement  stmt = connection.prepareStatement("SELECT * FROM lastConversation WHERE id = ?");
+                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM lastConversation WHERE id = ?");
                 stmt.setInt(1, i);
                 rs = stmt.executeQuery();
                 if(rs.next()){

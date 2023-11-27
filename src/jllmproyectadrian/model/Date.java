@@ -7,7 +7,6 @@ package jllmproyectadrian.model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import static java.time.temporal.TemporalQueries.localTime;
 
 /**
  * @author adria
@@ -66,30 +65,9 @@ public class Date {
     
     public void setTime(String time){
         LocalTime localTime = null;
-        if(time.length() == 8){
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
             localTime = LocalTime.parse(time, formatter);
-        }else if (time.length() == 5){
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:m:s");
-            localTime = LocalTime.parse(time, formatter);
-        }else if(time.length() < 8 && time.length() > 5){
-            if(time.toCharArray()[1] == ':' && time.toCharArray()[4] == ':' && time.toCharArray()[6] != '\0'){
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm:ss");
-                localTime = LocalTime.parse(time, formatter);
-            }else if(time.toCharArray()[1] == ':' && time.toCharArray()[3] == ':' && time.toCharArray()[5] != '\0'){
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:m:ss");
-                localTime = LocalTime.parse(time, formatter);
-            }else if(time.toCharArray()[2] == ':' && time.toCharArray()[4] == ':' && time.toCharArray()[6] != '\0'){
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:m:ss");
-                localTime = LocalTime.parse(time, formatter);
-            }else if(time.toCharArray()[2] == ':' && time.toCharArray()[5] == ':' && time.toCharArray()[7] == '\0'){
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:s");
-                localTime = LocalTime.parse(time, formatter);
-            }else if(time.toCharArray()[1] == ':' && time.toCharArray()[4] == ':' && time.toCharArray()[6] == '\0'){
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm:s");
-                localTime = LocalTime.parse(time, formatter);
-            }
-        }
+        
         
         this.time = localTime;   
     }
