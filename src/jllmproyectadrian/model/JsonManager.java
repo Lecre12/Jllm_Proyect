@@ -6,14 +6,12 @@ package jllmproyectadrian.model;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.ProcessBuilder.Redirect.Type;
+
 import java.nio.charset.StandardCharsets;
 import static jllmproyectadrian.util.CreateFolder.createFolderIfNotExists;
 import java.nio.file.Files;
@@ -21,7 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.List;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
