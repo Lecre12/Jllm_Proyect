@@ -70,4 +70,12 @@ public class Controller {
         return m.readSpecificConversation(table);
     }
     
+    public void initJsonManager(){
+        m.initDataBase();
+    }
+    
+    public void exportTable(String tableName){
+        m.exportTable(tableName);
+    }
+    
 }

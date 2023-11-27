@@ -4,7 +4,6 @@
  */
 package jllmproyectadrian.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -12,6 +11,7 @@ import java.util.ArrayList;
  */
 public class Model {
     DataBase dataBase;
+    JsonManager jsonManager;
     ArrayList <Conversation> conversations = new ArrayList <Conversation>();
     
     public void createConversation(String message, String answer, Date date){
@@ -73,5 +73,13 @@ public class Model {
         this.conversations = dataBase.readSpecificConversation(table, maxId);
         return conversations;
     }
-      
+    
+    public void initJsonManager(){
+        this.jsonManager = new JsonManager(dataBase);
+    }
+    
+    public void exportTable(String tableName){
+        initJsonManager();
+        this.jsonManager.exportTable(tableName);
+    }
 }

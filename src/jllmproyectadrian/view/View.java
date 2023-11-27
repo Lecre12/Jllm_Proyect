@@ -37,6 +37,7 @@ public class View {
             System.out.println("1. Fake_LLM");
             System.out.println("2. RandomCSV_LLM");
             System.out.println("3. Smart_LLM");
+            System.out.println("4. Exportar una conversacion");
             System.out.println("Introduzca el numero que quiere o \"exit\" para salir");
             option = readMessageScan();
             if(option.equalsIgnoreCase("exit")){
@@ -49,6 +50,12 @@ public class View {
                     case "2":
                         break;
                     case "3":
+                        break;
+                    case "4":
+                        String tableName = null;
+                        showAllConversations();
+                        tableName = menuForExport();
+                        c.exportTable(tableName);
                         break;
                     default:
                         System.out.println("[ERROR] No se ha introducido ninguno de los tres numeros o exit...");
@@ -240,6 +247,19 @@ public class View {
         
         
         return 0;
+    }
+    
+    public void initJsonManager(){
+        c.initJsonManager();
+    }
+    
+    public String menuForExport(){
+        
+        String tableName = null;
+        System.out.println("Escriba el nombre de la tabla a exportar:");
+        tableName = readMessageScan();
+        
+        return tableName;
     }
    
 }
