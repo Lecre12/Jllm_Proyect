@@ -8,7 +8,7 @@ public class Conversation {
     private String message;
     private String answer;
     private Date date;
-    
+
     public Conversation(String message, String answer, Date date){
         this.message = message;
         this.answer = answer;
@@ -74,6 +74,6 @@ public class Conversation {
         Date pastDate = new Date(date, time);
         this.date = pastDate;
     }
-    
+
     
 }

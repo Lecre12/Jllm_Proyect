@@ -4,7 +4,10 @@
  */
 package jllmproyectadrian.model;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author adria
@@ -82,4 +85,14 @@ public class Model {
         initJsonManager();
         this.jsonManager.exportTable(tableName);
     }
+    
+    public void importTable(String tableName){
+        initJsonManager();
+        try {
+            this.conversations = this.jsonManager.importTable(tableName);
+        } catch (IOException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
 }

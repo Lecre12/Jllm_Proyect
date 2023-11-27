@@ -78,4 +78,8 @@ public class Controller {
         m.exportTable(tableName);
     }
     
+    public void importTable(String tableName){
+        m.importTable(tableName);
+    }
+    
 }

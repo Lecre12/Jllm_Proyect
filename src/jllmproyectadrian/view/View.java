@@ -38,6 +38,7 @@ public class View {
             System.out.println("2. RandomCSV_LLM");
             System.out.println("3. Smart_LLM");
             System.out.println("4. Exportar una conversacion");
+            System.out.println("5. Importar una conversacion");
             System.out.println("Introduzca el numero que quiere o \"exit\" para salir");
             option = readMessageScan();
             if(option.equalsIgnoreCase("exit")){
@@ -56,6 +57,28 @@ public class View {
                         showAllConversations();
                         tableName = menuForExport();
                         c.exportTable(tableName);
+                        break;
+                    case "5":
+                        boolean canExit = false;
+                        String tableNameReaded = null;
+                        do{
+                            System.out.println("Introduzca un titulo para su conversacion");
+                            tableNameReaded = readMessageScan();
+                            if(tableNameReaded == null){
+                                canExit = false;
+                                System.out.println("Tienes que poner un titulo para la conversacion");
+                            }else if(tableNameReaded.startsWith("^[^0-9].*")){
+                                canExit = true;
+                            }else{
+                                tableNameReaded = "t" + tableNameReaded;
+                                canExit = true;
+                            }
+                            if(tableNameReaded.contains(" ")){
+                                tableNameReaded.replace(" ", "");
+                            }
+                        }while(!canExit);
+                        c.importTable(tableNameReaded);
+                        c.saveConversationAsDay();
                         break;
                     default:
                         System.out.println("[ERROR] No se ha introducido ninguno de los tres numeros o exit...");
