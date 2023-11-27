@@ -295,4 +295,40 @@ public class DataBase {
         return message;
     }
     
+    public String locateLastTableAsDay(ArrayList<Conversation> lastConver){
+        
+        ResultSet rs = null;
+        String tableName = null;
+        
+        for(String table : getAllTablesNames()){
+            
+            try(Statement stmt = connection.createStatement()){
+                rs = stmt.executeQuery("SELECT name AS nombre_tabla FROM sqlite_master WHERE type='table' AND EXISTS(SELECT 1 FROM lastConversation" +
+                    " AS table1 JOIN " + table + " AS table2 ON table1.message = table2.message AND table1.answer = table2.answer AND table1.date = table2.date AND table1.time = table2.time " +
+                    "AND table1.id = table2.id WHERE sqlite_master.name != 'lastConversation');");
+                if(rs.next()){
+                    tableName = rs.getString("nombre_tabla");
+                }
+                if(tableName!=null){
+                    rs.close();
+                    return tableName;
+                }
+                
+            }catch(SQLException e){
+                throw new RuntimeException(e);
+            }finally{
+                if(rs != null){
+                    try {
+                        rs.close();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+            
+            
+        }
+        return null;
+    }
+    
 }

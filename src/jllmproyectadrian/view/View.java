@@ -82,7 +82,10 @@ public class View {
                         createConversation();
                         break;
                     case "2":
-                        System.out.println("Hola");
+                        String tableName = null;  
+                        tableName = c.getDatabase().locateLastTableAsDay(c.showLastConversation());
+                        System.out.println(tableName);
+                        c.deleteTable(tableName);
                         for(Conversation conv : c.showLastConversation()){
                             System.out.print("[Yo: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
                                                 + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
@@ -92,6 +95,7 @@ public class View {
                             System.out.println(conv.getAnswer());
                         }
                         continueConversation(true, null);
+                        c.saveConversationAsDay();
                         break;
                     case "3":
                         showAllConversations();
