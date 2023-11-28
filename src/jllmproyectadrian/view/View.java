@@ -56,6 +56,9 @@ public class View {
                         String tableName = null;
                         showAllConversations();
                         tableName = menuForExport();
+                        if(tableName.toLowerCase().equalsIgnoreCase("exit")){
+                            break;
+                        }
                         c.exportTable(tableName);
                         break;
                     case "5":
@@ -67,18 +70,26 @@ public class View {
                             if(tableNameReaded == null){
                                 canExit = false;
                                 System.out.println("Tienes que poner un titulo para la conversacion");
-                            }else if(tableNameReaded.startsWith("^[^0-9].*")){
+                            }else if(!tableNameReaded.startsWith("^[^0-9].*")){
                                 canExit = true;
                             }else{
                                 tableNameReaded = "t" + tableNameReaded;
                                 canExit = true;
                             }
                             if(tableNameReaded.contains(" ")){
-                                tableNameReaded.replace(" ", "");
+                                tableNameReaded = tableNameReaded.replace(" ", "");
                             }
                         }while(!canExit);
-                        c.importTable(tableNameReaded);
-                        c.saveConversationAsDay();
+                        if(tableNameReaded.toLowerCase().equalsIgnoreCase("exit")){
+                            break;
+                        }
+                        c.importTable();
+                        if(c.getConversation() == null){
+                            System.out.println("[ERROR]: No hay ningun archivo en la carpeta de importacion");
+                        }else{
+                            c.saveConversationAsDay(tableNameReaded);
+                        }
+                        
                         break;
                     default:
                         System.out.println("[ERROR] No se ha introducido ninguno de los tres numeros o exit...");
@@ -125,7 +136,7 @@ public class View {
                             System.out.println(conv.getAnswer());
                         }
                         continueConversation(true, null);
-                        c.saveConversationAsDay();
+                        c.saveConversationAsDay(null);
                         break;
                     case "3":
                         showAllConversations();
@@ -176,7 +187,7 @@ public class View {
             c.saveLastConversatio(c.getLastConversation());
             i++;
         }
-        c.saveConversationAsDay();
+        c.saveConversationAsDay(null);
         
     }
     

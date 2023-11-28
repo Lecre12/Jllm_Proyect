@@ -46,8 +46,8 @@ public class Controller {
         return m.getDataBase();
     }
     
-    public void saveConversationAsDay(){
-        m.saveConversationAsDay();
+    public void saveConversationAsDay(String tableName){
+        m.saveConversationAsDay(tableName);
     }
     
     public void deleteTable(String table){
@@ -78,8 +78,12 @@ public class Controller {
         m.exportTable(tableName);
     }
     
-    public void importTable(String tableName){
-        m.importTable(tableName);
+    public void importTable(){
+        m.importTable();
+    }
+    
+    public ArrayList<Conversation> getConversation(){
+        return m.getConversation();
     }
     
 }

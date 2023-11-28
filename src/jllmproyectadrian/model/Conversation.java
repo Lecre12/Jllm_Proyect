@@ -1,5 +1,8 @@
 package jllmproyectadrian.model;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 /**
  * @author adria
  */
@@ -18,7 +21,7 @@ public class Conversation {
     public Conversation(String message, String answer, String date, String time){
         this.message = message;
         this.answer = answer;
-        setDate(date, time);
+        setDateFromStrings(date, time);
     }
     
     public Conversation(){
@@ -69,7 +72,16 @@ public class Conversation {
         return this.date;
     }
     
-    public void setDate(String date, String time) {
+    public void setDateFromDate(LocalDate date){
+        this.date.setDateFromDate(date);
+    }
+    
+    
+    public void setTimeFromTime(LocalTime time){
+        this.date.setTimeFromTime(time);
+    }
+    
+    public void setDateFromStrings(String date, String time) {
         
         Date pastDate = new Date(date, time);
         this.date = pastDate;

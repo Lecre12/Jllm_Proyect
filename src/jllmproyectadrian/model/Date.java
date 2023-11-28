@@ -59,6 +59,15 @@ public class Date {
         LocalDate localDate = LocalDate.parse(date, formatter);
         this.date = localDate;
     }
+    
+    public void setDateFromDate(LocalDate date){
+        this.date = date;
+    }
+    
+    public void setTimeFromTime(LocalTime time){
+        this.time = time;
+    }
+    
     public LocalDate getDate(){
         return this.date;
     }

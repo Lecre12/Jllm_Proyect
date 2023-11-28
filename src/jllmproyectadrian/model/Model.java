@@ -44,8 +44,8 @@ public class Model {
         dataBase.deleteLastConversation();
     }
     
-    public void saveConversationAsDay(){
-        dataBase.saveConversationAsDay(this.conversations);
+    public void saveConversationAsDay(String tableName){
+        dataBase.saveConversationAsDay(this.conversations, tableName);
     }
     
     public void continueConversationAsDay(String table){
@@ -86,13 +86,17 @@ public class Model {
         this.jsonManager.exportTable(tableName);
     }
     
-    public void importTable(String tableName){
+    public void importTable(){
         initJsonManager();
         try {
-            this.conversations = this.jsonManager.importTable(tableName);
+            this.conversations = this.jsonManager.importTable();
         } catch (IOException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public ArrayList<Conversation> getConversation(){
+        return this.conversations;
     }
     
 }

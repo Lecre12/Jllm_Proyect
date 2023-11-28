@@ -42,7 +42,7 @@ public class DataBase {
         try(PreparedStatement stmt = connection.prepareStatement("INSERT INTO lastConversation(message, answer, date, time, id)VALUES(?,?,?,?,?);");) { 
             stmt.setString(1, message);
             stmt.setString(2, answer);
-            stmt.setString(3, String.format("%02d", date.getYear()) + "-" + String.format("%02d", date.getMonth()) + "-" + String.format("%02d", date.getDay()));
+            stmt.setString(3, String.format("%04d", date.getYear()) + "-" + String.format("%02d", date.getMonth()) + "-" + String.format("%02d", date.getDay()));
             stmt.setString(4, String.format("%02d", date.getHour()) + ":" + String.format("%02d", date.getMinute()) + ":" + String.format("%02d", date.getSecond()));
             stmt.setInt(5, getMaxId("lastConversation") + 1);
             stmt.executeUpdate();
@@ -68,7 +68,7 @@ public class DataBase {
                     conver.setAnswer(rs.getString("answer"));
                     date = rs.getString("date");
                     time = rs.getString("time");
-                    conver.setDate(date, time); 
+                    conver.setDateFromStrings(date, time); 
                     conversations.add(conver);
                 }
             } catch (SQLException e) {
@@ -131,26 +131,49 @@ public class DataBase {
         
     }
     
-    public void saveConversationAsDay(ArrayList<Conversation> conversations){
+    public void saveConversationAsDay(ArrayList<Conversation> conversations, String tableName){
         
-        long epoch = System.currentTimeMillis()/1000;
-        String create = "CREATE TABLE t"+ epoch + "(message VARCHAR(100) NOT NULL, answer VARCHAR(100) NOT NULL, date VARCHAR(10) NOT NULL, time VARCHAR(10) NOT NULL, id INT NOT NULL, PRIMARY KEY(id, date, time));";
+        long epoch = epoch = System.currentTimeMillis()/1000;;
+        String create;
+        if(tableName == null){
+            create = "CREATE TABLE t"+ epoch + "(message VARCHAR(100) NOT NULL, answer VARCHAR(100) NOT NULL, date VARCHAR(10) NOT NULL, time VARCHAR(10) NOT NULL, id INT NOT NULL, PRIMARY KEY(id, date, time));";
+        }else{
+            create = "CREATE TABLE t"+ tableName + "(message VARCHAR(100) NOT NULL, answer VARCHAR(100) NOT NULL, date VARCHAR(10) NOT NULL, time VARCHAR(10) NOT NULL, id INT NOT NULL, PRIMARY KEY(id, date, time));";
+        }
+        
+        
+        //String create = "CREATE TABLE t"+ epoch + "(message VARCHAR(100) NOT NULL, answer VARCHAR(100) NOT NULL, date VARCHAR(10) NOT NULL, time VARCHAR(10) NOT NULL, id INT NOT NULL, PRIMARY KEY(id, date, time));";
         try {
             Statement stmt1 = connection.createStatement();
             stmt1.execute(create);
             int i = 1;
             for(Conversation conv : conversations){
-                try(PreparedStatement stmt = connection.prepareStatement("INSERT INTO t" + epoch + "(message, answer, date, time, id)VALUES(?,?,?,?,?);");) { 
-                    stmt.setString(1, conv.getMessage());
-                    stmt.setString(2, conv.getAnswer());
-                    stmt.setString(3, conv.getDate().getYear() + "-" + conv.getDate().getMonth() + "-" + conv.getDate().getDay());
-                    stmt.setString(4, conv.getDate().getHour() + ":" + conv.getDate().getMinute() + ":" + conv.getDate().getSecond());
-                    stmt.setInt(5, i);
-                    i++;
-                    stmt.executeUpdate();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                if(tableName == null){
+                    try(PreparedStatement stmt = connection.prepareStatement("INSERT INTO t" + epoch + "(message, answer, date, time, id)VALUES(?,?,?,?,?);");) { 
+                        stmt.setString(1, conv.getMessage());
+                        stmt.setString(2, conv.getAnswer());
+                        stmt.setString(3, String.format("%04d", conv.getDate().getYear()) + "-" +  String.format("%02d", conv.getDate().getMonth()) + "-" + String.format("%02d",conv.getDate().getDay()));
+                        stmt.setString(4, String.format("%02d",conv.getDate().getHour()) + ":" + String.format("%02d",conv.getDate().getMinute()) + ":" + String.format("%02d",conv.getDate().getSecond()));
+                        stmt.setInt(5, i);
+                        i++;
+                        stmt.executeUpdate();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }else{
+                     try(PreparedStatement stmt = connection.prepareStatement("INSERT INTO t" + tableName + "(message, answer, date, time, id)VALUES(?,?,?,?,?);");) { 
+                        stmt.setString(1, conv.getMessage());
+                        stmt.setString(2, conv.getAnswer());
+                        stmt.setString(3, String.format("%04d", conv.getDate().getYear()) + "-" +  String.format("%02d", conv.getDate().getMonth()) + "-" + String.format("%02d",conv.getDate().getDay()));
+                        stmt.setString(4, String.format("%02d",conv.getDate().getHour()) + ":" + String.format("%02d",conv.getDate().getMinute()) + ":" + String.format("%02d",conv.getDate().getSecond()));
+                        stmt.setInt(5, i);
+                        i++;
+                        stmt.executeUpdate();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
+                
             }
             
         } catch (SQLException e) {
@@ -182,7 +205,7 @@ public class DataBase {
                     conver.setAnswer(rs.getString("answer"));
                     date = rs.getString("date");
                     time = rs.getString("time");
-                    conver.setDate(date, time); 
+                    conver.setDateFromStrings(date, time); 
                     conversations.add(conver);
                 }
             } catch (SQLException e) {
