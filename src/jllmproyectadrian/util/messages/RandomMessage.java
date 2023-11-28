@@ -31,7 +31,7 @@ public class RandomMessage {
         this.messages.add("-Estas obsesionado con la comida...-¿A que te refieres croquetamente?");
         this.messages.add("-Camarero este filete tiene muchos nervios.-Normal es la primera vez que se lo comen");
         this.messages.add("Si los zombis se desacen con el tiempo...¿Zombiodegradables?");
-        this.messages.add("Chsite 1");
+        //this.messages.add("Chsite 1");
         
     }
     public String getRandomJoke(int index){

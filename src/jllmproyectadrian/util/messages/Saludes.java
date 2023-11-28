@@ -39,5 +39,9 @@ public class Saludes {
         return this.saludes.get(index);
     }
     
+    public ArrayList<String> getSaludesA(){
+        return this.saludes;
+    }
+    
     
 }
