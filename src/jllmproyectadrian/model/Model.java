@@ -14,14 +14,13 @@ import java.util.logging.Logger;
  */
 public class Model {
     DataBase dataBase;
+    Narrator narrator = new Narrator();
     JsonManager jsonManager;
     ArrayList <Conversation> conversations = new ArrayList <Conversation>();
     
     public void createConversation(String message, String answer, Date date){
-        
         Conversation conv = new Conversation(message, answer, date);
         this.conversations.add(conv);
-        
     }
     
     public ArrayList <Conversation> readConversation(){
@@ -101,6 +100,10 @@ public class Model {
     
     public ArrayList<Conversation> getConversation(){
         return this.conversations;
+    }
+    
+    public void sayString(String text){
+        narrator.sayString(text);
     }
     
 }

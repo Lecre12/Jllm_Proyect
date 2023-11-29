@@ -90,4 +90,8 @@ public class Controller {
         return m.getConversation();
     }
     
+    public void sayString(String text){
+        m.sayString(text);
+    }
+    
 }

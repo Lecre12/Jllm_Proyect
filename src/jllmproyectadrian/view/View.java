@@ -45,6 +45,7 @@ public class View {
         
         while(!exit){
             
+            c.sayString("Elija la opcion con la que quiere tener interaccion:.1. Fake_LLM.2. RandomCSV_LLM.3. Smart_LLM.4. Exportar una conversacion.5. Importar una conversacion.Introduzca el numero que quiere o \"exit\" para salir.");
             System.out.println("Elija la opcion con la que quiere tener interaccion:");
             System.out.println("1. Fake_LLM");
             System.out.println("2. RandomCSV_LLM");
@@ -125,6 +126,7 @@ public class View {
         String option;
         
         while(!exit){
+            c.sayString("Seleccione lo que quiere realizar en la opcion Fake_LLM:.1. Nuevo chat Fake_LLM.2. Restaurar ultima conversacion realizada.3. Listar conversaciones anteriores.Introduzca el numero que quiere o \"exit\" para volver al anterior menu o \"exit all\" para salir completamente del programa");
             System.out.println("Seleccione lo que quiere realizar en la opcion Fake_LLM:");
             System.out.println("1. Nuevo chat Fake_LLM");
             System.out.println("2. Restaurar ultima conversacion realizada");
