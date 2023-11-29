@@ -40,6 +40,10 @@ public class Model {
         dataBase.insertLastConversation(conv.getMessage(), conv.getAnswer(), conv.getDate());
     }
     
+    public void removeAllInformation(){
+        this.conversations.clear();
+    }
+    
     public void deleteLastConversation(){
         dataBase.deleteLastConversation();
     }

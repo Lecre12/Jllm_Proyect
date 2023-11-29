@@ -50,6 +50,10 @@ public class Controller {
         m.saveConversationAsDay(tableName);
     }
     
+    public void removeAllInformation(){
+        m.removeAllInformation();
+    }
+    
     public void deleteTable(String table){
         m.deleteTable(table);
     }

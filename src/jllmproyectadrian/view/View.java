@@ -4,12 +4,15 @@
  */
 package jllmproyectadrian.view;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import static java.lang.Math.random;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import jllmproyectadrian.controler.Controller;
@@ -34,6 +37,8 @@ public class View {
     
     public void principalMenu() throws IOException{
         
+        createFolderIfNotExists(Paths.get(System.getProperty("user.home") + "\\Desktop\\JLLM"));
+        
         System.out.println("Buenas, soy el chat jllm!");
         String option;
         boolean exit = false;
@@ -49,14 +54,18 @@ public class View {
             System.out.println("Introduzca el numero que quiere o \"exit\" para salir");
             option = readMessageScan();
             if(option.equalsIgnoreCase("exit")){
-                exit = true;
+                return;
             }else{
                 switch(option){
                     case "1":
-                        option1Menu();
+                        if(option1Menu() == 1){
+                            return;
+                        }
                         break;
                     case "2":
-                        option2Menu();
+                        if(option2Menu() == 1){
+                            return;
+                        }
                         break;
                     case "3":
                         break;
@@ -110,7 +119,7 @@ public class View {
         
     }
     
-    private void option1Menu() throws IOException{
+    private int option1Menu() throws IOException{
         
         boolean exit = false;
         String option;
@@ -120,11 +129,15 @@ public class View {
             System.out.println("1. Nuevo chat Fake_LLM");
             System.out.println("2. Restaurar ultima conversacion realizada");
             System.out.println("3. Listar conversaciones anteriores");
-            System.out.println("Introduzca el numero que quiere o \"exit\" para salir");
+            System.out.println("Introduzca el numero que quiere o \"exit\" para volver al anterior menu o \"exit all\" para salir completamente del programa");
             
             option = readMessageScan();
             if(option.equalsIgnoreCase("exit")){
                 exit = true;
+                c.removeAllInformation();
+                if(option.equalsIgnoreCase("exit all")){
+                    return 1;
+                }
             }else{
                 switch(option){
                     case "1":
@@ -150,7 +163,10 @@ public class View {
                         showAllConversations();
                         int dev;
                         do{
-                            dev = menuForDeleteTable();
+                            dev = menuForDeleteTable(1);
+                            if(dev == 2){
+                                return 1;
+                            }
                         }while(dev == -1);
                         break;
                     default:
@@ -160,10 +176,10 @@ public class View {
             }
         }
         
-        
+        return 0;
     }
     
-    private void option2Menu(){
+    private int option2Menu(){
         boolean exit = false;
         String option;
         
@@ -172,12 +188,16 @@ public class View {
             System.out.println("1. Nuevo chat Random_CSV_LLM");
             System.out.println("2. Restaurar ultima conversacion realizada");
             System.out.println("3. Listar conversaciones anteriores");
-            System.out.println("Introduzca el numero que quiere o \"exit\" para salir");
+            System.out.println("Introduzca el numero que quiere o \"exit\" para volver al anterior menu o \"exit all\" para salir completamente del programa");
             
             option = readMessageScan();
             if(option.equalsIgnoreCase("exit")){
                 exit = true;
-            }else{
+                c.removeAllInformation();
+                if(option.equalsIgnoreCase("exit all")){
+                    return 1;
+                }
+            }else {
                 switch(option){
                     case "1":
                         createConversationCsv();
@@ -195,14 +215,18 @@ public class View {
                                                 + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
                             System.out.println(conv.getAnswer());
                         }
-                        //continueConversation(true, null);
+                        c.removeAllInformation();
+                        continueConversationCsv(true, null);
                         c.saveConversationAsDay(null);
                         break;
                     case "3":
                         showAllConversations();
                         int dev;
                         do{
-                            dev = menuForDeleteTable();
+                            dev = menuForDeleteTable(2);
+                            if(dev == 2){
+                                return 1;
+                            }
                         }while(dev == -1);
                         break;
                     default:
@@ -211,10 +235,12 @@ public class View {
                 }
             }
         }
+        return 0;
     }
     
     public void createConversationCsv(){
         
+        c.removeAllInformation();
         c.getDatabase().deleteLastConversation();
         System.out.println("Dime algo ☺(\"exit\" para salir y volver al menu):");
         
@@ -226,52 +252,69 @@ public class View {
         boolean exit = false;
         while(!exit){
             String message = readMessageScan();
+            String answer = null;
             if(message.toLowerCase().contains("exit")){
                 exit = true;
                 continue;
             }else if(message.toLowerCase().contains("hola")){
-                String salude = randomSaludeCsv();
-                System.out.println(salude);
-            }else if(message.toLowerCase().contains("chiste")){
-                String joke = randomJokeCsv();
-            }else{
+                System.out.println(answer=randomMessageCsv("salude"));
+                if(!answer.equalsIgnoreCase("no encontrado")){
+                   c.createConversation(message, answer); 
+                }
                 
+            }else if(message.toLowerCase().contains("chiste")){
+                System.out.println(answer=randomMessageCsv("joke"));
+                if(!answer.equalsIgnoreCase("no encontrado")){
+                    c.createConversation(message, answer);
+                }
+            }else{
+                System.out.println(answer=randomMessageCsv("random"));
+                if(!answer.equalsIgnoreCase("no encontrado")){
+                    c.createConversation(message, answer);
+                }
+            }
+            if(!answer.equalsIgnoreCase("no encontrado")){
+                c.saveLastConversatio(c.getLastConversation());
             }
         }
-        
+        c.saveConversationAsDay(null);
     }
     
-    public String randomSaludeCsv(){
+    public String randomMessageCsv(String type){
         
-        String salude = null;
-        Path saludeFilePath = Paths.get(System.getProperty("user.home") + "\\Desktop\\JLLM\\CSV_FILES\\saludes.csv");
+        String message = null;
+        Path messagesFilePath = Paths.get(System.getProperty("user.home") + "\\Desktop\\JLLM\\CSV_FILES\\messages.csv");
+        String searchType = type;
+        String searchNumber;
+        searchNumber = ""+((int) (random() * 10));
         
-        if(!saludeFilePath.toFile().exists()){
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(saludeFilePath.toFile()))) {
-            
-                for (int i = 0; i < s.getSaludesA().size(); i++) {
-                    writer.write(s.getSaludesA().get(i) + "\n");
+        try (CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(messagesFilePath.toFile()), StandardCharsets.UTF_8))) {
+        String[] nextRecord;
+            while ((nextRecord = reader.readNext()) != null) {
+            boolean typeMatch = false;
+            boolean numberMatch = false;
+
+            // Verificar cada columna para el tipo y el número
+            for (String columnValue : nextRecord) {
+                if (columnValue.startsWith(searchType)) {
+                    typeMatch = true;
+                }else if(columnValue.endsWith(searchNumber)) {
+                    numberMatch = true;
                 }
-
-            }catch (IOException e) {
-                e.printStackTrace();
+                
+            }
+            if (typeMatch && numberMatch) {
+                message = nextRecord[2];
+                break;
             }
         }
-        int targetLineNumber = (int) (random() * 10);
-        try (BufferedReader br = new BufferedReader(new FileReader(saludeFilePath.toFile()))) {
-            String line;
-            int currentLineNumber = 0;
-            while ((line = br.readLine()) != null && currentLineNumber < targetLineNumber - 1) {
-                currentLineNumber++;
-            }
-            if (currentLineNumber == targetLineNumber - 1) {
-                salude = line;
-            }
-
-        } catch (IOException e) {
-             e.printStackTrace();
+        } catch (IOException | CsvValidationException e) {
+            e.printStackTrace(); 
         }
-        return salude;
+        if(message == null){
+            return "no encontrado";
+        }
+        return message;
     }
     
     public String randomMessage(){
@@ -296,6 +339,7 @@ public class View {
     public void createConversation(){
         
         c.getDatabase().deleteLastConversation();
+        c.removeAllInformation();
         System.out.println("Dime algo ☺(\"exit\" para salir y volver al menu):");
         
         boolean exit = false;      
@@ -312,9 +356,6 @@ public class View {
                 int joke = (int) (random() * 10);
                 System.out.println(rm.getRandomJoke(joke));
                 c.createConversation(message, rm.getRandomJoke(joke));    
-            }else if(message.toLowerCase().contains("conversacion")){
-                //System.out.println(c.showLastConversation(fileTreat).size());
-                //continue;
             }else{
                 int index = (int) (random() * 10 + 10);
                 System.out.println(rm.getRandomMessage(index));
@@ -323,12 +364,12 @@ public class View {
             c.saveLastConversatio(c.getLastConversation());
         }
         c.saveConversationAsDay(null);
-        
     }
     
     public void continueConversation(boolean comeFromLast, String table){
         
         System.out.println("Continuemos por donde lo dejamos ☺(\"exit\" para salir y volver al menu):");
+        c.removeAllInformation();
         /*for(Conversation conv : c.readSpecificConversation(table)){
             System.out.print("[Yo: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
                                 + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
@@ -337,6 +378,7 @@ public class View {
                                 + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
             System.out.println(conv.getAnswer());
         }*/
+        
         boolean exit = false;
         int i = 0;
         
@@ -353,9 +395,6 @@ public class View {
                 int joke = (int) (random() * 10);
                 System.out.println(rm.getRandomJoke(joke));
                 c.createConversation(message, rm.getRandomJoke(joke));    
-            }else if(message.toLowerCase().contains("conversacion")){
-                //System.out.println(c.showLastConversation(fileTreat).size());
-                //continue;
             }else{
                 int index = (int) (random() * 10 + 10);
                 System.out.println(rm.getRandomMessage(index));
@@ -370,6 +409,44 @@ public class View {
         
     }
     
+    public void continueConversationCsv(boolean comeFromLast, String table){
+        System.out.println("Continuemos por donde lo dejamos ☺(\"exit\" para salir y volver al menu):");
+        c.removeAllInformation();
+        /*for(Conversation conv : c.readSpecificConversation(table)){
+            System.out.print("[Yo: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
+                                + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
+            System.out.println(conv.getMessage());
+            System.out.print("[PROGRAMA: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
+                                + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
+            System.out.println(conv.getAnswer());
+        }*/
+        boolean exit = false;
+        int i = 0;
+        
+        while(!exit){    
+            String message = readMessageScan();
+            String answer = null;
+            if(message.toLowerCase().contains("hola")){
+                System.out.println(answer=randomMessageCsv("salude"));
+                c.createConversation(message, answer);
+            }else if(message.equalsIgnoreCase("exit")){
+                exit = true;
+                continue;
+            }else if(message.toLowerCase().contains("chiste")){
+                System.out.println(answer=randomMessageCsv("joke"));
+                c.createConversation(message, answer); 
+            }else{
+                System.out.println(answer=randomMessageCsv("random"));
+                c.createConversation(message, answer);
+            }
+            c.saveLastConversatio(c.getLastConversation());
+            i++;
+        }
+        if(!comeFromLast){
+            c.continueConversationAsDay(table);
+        }
+    }
+    
     public void showAllConversations(){
         
         int i = 1;
@@ -381,15 +458,19 @@ public class View {
         }  
     }
     
-    public int menuForDeleteTable(){
+    public int menuForDeleteTable(int typeOfAi){
         
         String option = null, table = null;
         System.out.println("Si desea borrar una conversacion ponga: \"numero conversacion delete\" (ejemplo: t1700917167 delete)");
         System.out.println("Si desea restaurar una conversacion ponga \"numero conversacion restore\" (ejemplo t1700917167 restore)");
-        System.out.println("Escriba \"exit\" para salir al menu");
+        System.out.println("Escriba \"exit\" para salir al menu o \"exit all\" para salir del programa completamente");
         option = readMessageScan();
         boolean exists = false;
+        c.removeAllInformation();
         if(option.toLowerCase().contains("exit")){
+            if(option.toLowerCase().equalsIgnoreCase("exit all")){
+                return 2;
+            }
             return 1;
         }
         
@@ -408,7 +489,12 @@ public class View {
         
         if(option.toLowerCase().contains("restore")){
             System.out.println("Tabla restaurada correctamente\n");
-            continueConversation(false, table);
+            if(typeOfAi == 1){
+                continueConversation(false, table);
+            }else if(typeOfAi == 2){
+                continueConversationCsv(false, table);
+            }
+            
         }else if(option.toLowerCase().contains("delete")){
             c.deleteTable(table);
             System.out.println("Tabla borrada correctamente\n");
@@ -425,7 +511,7 @@ public class View {
     public String menuForExport(){
         
         String tableName = null;
-        System.out.println("Escriba el nombre de la tabla a exportar:");
+        System.out.println("Escriba el nombre de la tabla a exportar(\"exit\" para volver al menu):");
         tableName = readMessageScan();
         
         return tableName;
