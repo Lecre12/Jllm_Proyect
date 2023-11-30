@@ -257,8 +257,8 @@ public class DataBase {
             try(PreparedStatement stmt = connection.prepareStatement("INSERT INTO " + table + "(message, answer, date, time, id)VALUES(?,?,?,?,?);");) { 
                 stmt.setString(1, conv.getMessage());
                 stmt.setString(2, conv.getAnswer());
-                stmt.setString(3, conv.getDate().getYear() + "-" + conv.getDate().getMonth() + "-" + conv.getDate().getDay());
-                stmt.setString(4, conv.getDate().getHour() + ":" + conv.getDate().getMinute() + ":" + conv.getDate().getSecond());
+                stmt.setString(3, String.format("%04d", conv.getDate().getYear()) + "-" +  String.format("%02d", conv.getDate().getMonth()) + "-" + String.format("%02d",conv.getDate().getDay()));
+                stmt.setString(4, String.format("%02d",conv.getDate().getHour()) + ":" + String.format("%02d",conv.getDate().getMinute()) + ":" + String.format("%02d",conv.getDate().getSecond()));
                 stmt.setInt(5, getMaxId(table) + 1);
                 stmt.executeUpdate();
 

@@ -15,6 +15,8 @@ import static java.lang.Math.random;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jllmproyectadrian.controler.Controller;
 import jllmproyectadrian.model.Conversation;
 import static jllmproyectadrian.util.CreateFolder.createFolderIfNotExists;
@@ -35,7 +37,7 @@ public class View {
         c.initDataBase();
     }
     
-    public void principalMenu() throws IOException{
+    public void principalMenu(boolean speak){
         
         createFolderIfNotExists(Paths.get(System.getProperty("user.home") + "\\Desktop\\JLLM"));
         
@@ -45,7 +47,9 @@ public class View {
         
         while(!exit){
             
+            if(speak){
             c.sayString("Elija la opcion con la que quiere tener interaccion:.1. Fake_LLM.2. RandomCSV_LLM.3. Smart_LLM.4. Exportar una conversacion.5. Importar una conversacion.Introduzca el numero que quiere o \"exit\" para salir.");
+            }
             System.out.println("Elija la opcion con la que quiere tener interaccion:");
             System.out.println("1. Fake_LLM");
             System.out.println("2. RandomCSV_LLM");
@@ -59,12 +63,19 @@ public class View {
             }else{
                 switch(option){
                     case "1":
-                        if(option1Menu() == 1){
-                            return;
+                    {
+                        try {
+                            if(option1Menu(speak) == 1){
+                                return;
+                            }
+                        } catch (IOException ex) {
+                            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                    }
                         break;
+
                     case "2":
-                        if(option2Menu() == 1){
+                        if(option2Menu(speak) == 1){
                             return;
                         }
                         break;
@@ -120,13 +131,15 @@ public class View {
         
     }
     
-    private int option1Menu() throws IOException{
+    private int option1Menu(boolean speak) throws IOException{
         
         boolean exit = false;
         String option;
         
         while(!exit){
+            if(speak){
             c.sayString("Seleccione lo que quiere realizar en la opcion Fake_LLM:.1. Nuevo chat Fake_LLM.2. Restaurar ultima conversacion realizada.3. Listar conversaciones anteriores.Introduzca el numero que quiere o \"exit\" para volver al anterior menu o \"exit all\" para salir completamente del programa");
+            }
             System.out.println("Seleccione lo que quiere realizar en la opcion Fake_LLM:");
             System.out.println("1. Nuevo chat Fake_LLM");
             System.out.println("2. Restaurar ultima conversacion realizada");
@@ -134,12 +147,13 @@ public class View {
             System.out.println("Introduzca el numero que quiere o \"exit\" para volver al anterior menu o \"exit all\" para salir completamente del programa");
             
             option = readMessageScan();
+            if(option.equalsIgnoreCase("exit all")){
+                    return 1;
+            }
             if(option.equalsIgnoreCase("exit")){
                 exit = true;
                 c.removeAllInformation();
-                if(option.equalsIgnoreCase("exit all")){
-                    return 1;
-                }
+                
             }else{
                 switch(option){
                     case "1":
@@ -181,11 +195,14 @@ public class View {
         return 0;
     }
     
-    private int option2Menu(){
+    private int option2Menu(boolean speak){
         boolean exit = false;
         String option;
         
         while(!exit){
+            if(speak){
+            c.sayString("Seleccione lo que quiere realizar en la opcion Random_CSV_LLM:.1. Nuevo chat Random_CSV_LLM.2. Restaurar ultima conversacion realizada.3. Listar conversaciones anteriores.Introduzca el numero que quiere o \"exit\" para volver al anterior menu o \"exit all\" para salir completamente del programa");
+            }
             System.out.println("Seleccione lo que quiere realizar en la opcion Fake_LLM:");
             System.out.println("1. Nuevo chat Random_CSV_LLM");
             System.out.println("2. Restaurar ultima conversacion realizada");
@@ -193,12 +210,12 @@ public class View {
             System.out.println("Introduzca el numero que quiere o \"exit\" para volver al anterior menu o \"exit all\" para salir completamente del programa");
             
             option = readMessageScan();
+            if(option.equalsIgnoreCase("exit all")){
+                    return 1;
+            }
             if(option.equalsIgnoreCase("exit")){
                 exit = true;
                 c.removeAllInformation();
-                if(option.equalsIgnoreCase("exit all")){
-                    return 1;
-                }
             }else {
                 switch(option){
                     case "1":
@@ -372,15 +389,15 @@ public class View {
         
         System.out.println("Continuemos por donde lo dejamos ☺(\"exit\" para salir y volver al menu):");
         c.removeAllInformation();
-        /*for(Conversation conv : c.readSpecificConversation(table)){
+        for(Conversation conv : c.readSpecificConversation(table)){
             System.out.print("[Yo: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
                                 + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
             System.out.println(conv.getMessage());
             System.out.print("[PROGRAMA: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
                                 + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
             System.out.println(conv.getAnswer());
-        }*/
-        
+        }
+        c.removeAllInformation();
         boolean exit = false;
         int i = 0;
         
@@ -407,6 +424,7 @@ public class View {
         }
         if(!comeFromLast){
             c.continueConversationAsDay(table);
+            c.removeAllInformation();
         }
         
     }
@@ -414,14 +432,15 @@ public class View {
     public void continueConversationCsv(boolean comeFromLast, String table){
         System.out.println("Continuemos por donde lo dejamos ☺(\"exit\" para salir y volver al menu):");
         c.removeAllInformation();
-        /*for(Conversation conv : c.readSpecificConversation(table)){
+        for(Conversation conv : c.readSpecificConversation(table)){
             System.out.print("[Yo: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
                                 + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
             System.out.println(conv.getMessage());
             System.out.print("[PROGRAMA: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
                                 + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
             System.out.println(conv.getAnswer());
-        }*/
+        }
+        c.removeAllInformation();
         boolean exit = false;
         int i = 0;
         
@@ -466,42 +485,48 @@ public class View {
         System.out.println("Si desea borrar una conversacion ponga: \"numero conversacion delete\" (ejemplo: t1700917167 delete)");
         System.out.println("Si desea restaurar una conversacion ponga \"numero conversacion restore\" (ejemplo t1700917167 restore)");
         System.out.println("Escriba \"exit\" para salir al menu o \"exit all\" para salir del programa completamente");
-        option = readMessageScan();
-        boolean exists = false;
+        boolean exists = false, exit = false;
         c.removeAllInformation();
-        if(option.toLowerCase().contains("exit")){
-            if(option.toLowerCase().equalsIgnoreCase("exit all")){
-                return 2;
+        do{
+            option = readMessageScan();
+            if(option.toLowerCase().contains("exit")){
+                exit = true;
+                if(option.toLowerCase().equalsIgnoreCase("exit all")){
+                    return 2;
+                }
+                return 1;
             }
-            return 1;
-        }
-        
-        for(String tableName : c.getTablesNames()){
-            if(!option.toLowerCase().contains(tableName)){
+
+            for(String tableName : c.getTablesNames()){
+                if(!option.toLowerCase().contains(tableName)){
+                }else{
+                    table = tableName;
+                    exists = true;
+                }
+            }
+            if(exists){
+            } else {
+                System.out.println("La tabla introducida no existe");
+                return -1;
+            }
+
+            if(option.toLowerCase().contains("restore")){
+                exit = true;
+                System.out.println("Tabla restaurada correctamente\n");
+                if(typeOfAi == 1){
+                    continueConversation(false, table);
+                }else if(typeOfAi == 2){
+                    continueConversationCsv(false, table);
+                }
+
+            }else if(option.toLowerCase().contains("delete")){
+                c.deleteTable(table);
+                exit = true;
+                System.out.println("Tabla borrada correctamente\n");
             }else{
-                table = tableName;
-                exists = true;
+                System.out.println("Introduzca tabla + delete / restore");
             }
-        }
-        if(exists){
-        } else {
-            System.out.println("La tabla introducida no existe o no se ha escrito correctamente delete/restore");
-            return -1;
-        }
-        
-        if(option.toLowerCase().contains("restore")){
-            System.out.println("Tabla restaurada correctamente\n");
-            if(typeOfAi == 1){
-                continueConversation(false, table);
-            }else if(typeOfAi == 2){
-                continueConversationCsv(false, table);
-            }
-            
-        }else if(option.toLowerCase().contains("delete")){
-            c.deleteTable(table);
-            System.out.println("Tabla borrada correctamente\n");
-        }
-        
+        }while(!exit);
         
         return 0;
     }
