@@ -276,18 +276,33 @@ public class View {
                 exit = true;
                 continue;
             }else if(message.toLowerCase().contains("hola")){
-                System.out.println(answer=randomMessageCsv("salude"));
+                System.out.println(answer=randomMessageCsv("saludo"));
                 if(!answer.equalsIgnoreCase("no encontrado")){
                    c.createConversation(message, answer); 
                 }
                 
-            }else if(message.toLowerCase().contains("chiste")){
-                System.out.println(answer=randomMessageCsv("joke"));
+            }else if(message.toLowerCase().contains("adios")){
+                System.out.println(answer=randomMessageCsv("despedida"));
+                if(!answer.equalsIgnoreCase("no encontrado")){
+                    c.createConversation(message, answer);
+                }
+            }else if(message.toLowerCase().contains("?")){
+                System.out.println(answer=randomMessageCsv("respuesta"));
+                if(!answer.equalsIgnoreCase("no encontrado")){
+                    c.createConversation(message, answer);
+                }
+            }else if(message.toLowerCase().contains("pregunta")){
+                System.out.println(answer=randomMessageCsv("pregunta"));
+                if(!answer.equalsIgnoreCase("no encontrado")){
+                    c.createConversation(message, answer);
+                }
+            }else if(message.toLowerCase().contains("refran")){
+                System.out.println(answer=randomMessageCsv("refran"));
                 if(!answer.equalsIgnoreCase("no encontrado")){
                     c.createConversation(message, answer);
                 }
             }else{
-                System.out.println(answer=randomMessageCsv("random"));
+                System.out.println(answer=randomMessageCsv("afirmacion"));
                 if(!answer.equalsIgnoreCase("no encontrado")){
                     c.createConversation(message, answer);
                 }
@@ -302,10 +317,13 @@ public class View {
     public String randomMessageCsv(String type){
         
         String message = null;
-        Path messagesFilePath = Paths.get(System.getProperty("user.home") + "\\Desktop\\JLLM\\CSV_FILES\\messages.csv");
+        Path messagesFilePath = Paths.get(System.getProperty("user.home") + "\\Desktop\\JLLM\\CSV_FILES\\input.csv");
         String searchType = type;
         String searchNumber;
-        searchNumber = ""+((int) (random() * 10));
+        searchNumber = ""+((int) (random() * 12));
+        if(searchNumber.equalsIgnoreCase("0")){
+            searchNumber = "1";
+        }
         
         try (CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(messagesFilePath.toFile()), StandardCharsets.UTF_8))) {
         String[] nextRecord;
@@ -323,7 +341,7 @@ public class View {
                 
             }
             if (typeMatch && numberMatch) {
-                message = nextRecord[2];
+                message = nextRecord[3];
                 break;
             }
         }
@@ -336,7 +354,7 @@ public class View {
         return message;
     }
     
-    public String randomMessage(){
+    /*public String randomMessage(){
         String message = null;
         Path saludeFilePath = Paths.get(System.getProperty("user.home") + "\\Desktop\\JLLM\\CSV_FILES\\randomMessages.csv");
         if(!saludeFilePath.toFile().exists()){
@@ -353,7 +371,7 @@ public class View {
         
         
         return message;
-    }
+    }*/
     
     public void createConversation(){
         
@@ -448,16 +466,22 @@ public class View {
             String message = readMessageScan();
             String answer = null;
             if(message.toLowerCase().contains("hola")){
-                System.out.println(answer=randomMessageCsv("salude"));
+                System.out.println(answer=randomMessageCsv("saludo"));
                 c.createConversation(message, answer);
             }else if(message.equalsIgnoreCase("exit")){
                 exit = true;
                 continue;
-            }else if(message.toLowerCase().contains("chiste")){
-                System.out.println(answer=randomMessageCsv("joke"));
+            }else if(message.toLowerCase().contains("adios")){
+                System.out.println(answer=randomMessageCsv("despedida"));
                 c.createConversation(message, answer); 
+            }else if(message.toLowerCase().contains("pregunta")){
+                System.out.println(answer=randomMessageCsv("pregunta"));
+                c.createConversation(message, answer);
+            }else if(message.toLowerCase().contains("?")){
+                System.out.println(answer=randomMessageCsv("respuesta"));
+                c.createConversation(message, answer);
             }else{
-                System.out.println(answer=randomMessageCsv("random"));
+                System.out.println(answer=randomMessageCsv("afirmacion"));
                 c.createConversation(message, answer);
             }
             c.saveLastConversatio(c.getLastConversation());
