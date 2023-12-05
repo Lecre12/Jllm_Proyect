@@ -50,7 +50,7 @@ public class Main {
         if(mode == 0){
             view.principalMenuNoInfo(speak);
         }else if(mode == 1 || mode == 2){
-            view.managerMenuMode(speak);
+            view.managerMenuMode(speak, fileMode);
         }
             
         

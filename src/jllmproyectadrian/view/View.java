@@ -4,8 +4,6 @@
  */
 package jllmproyectadrian.view;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import java.io.FileInputStream;
@@ -15,8 +13,6 @@ import static java.lang.Math.random;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jllmproyectadrian.controler.Controller;
 import jllmproyectadrian.model.Conversation;
 import static jllmproyectadrian.util.CreateFolder.createFolderIfNotExists;
@@ -576,7 +572,10 @@ public class View {
         
     }
     
-    public void managerMenuMode(boolean speak){
+    public void managerMenuMode(boolean speak, int fileMode){
+        if(fileMode == 2){
+            System.out.println("El modo de exportacion/importacion con archivos de terminacion .xml no esta listo, se trabajara con .json, disculpe las molestias");
+        }
         if(this.mode == 1){
             s = new Saludes();
             rm = new RandomMessage();
