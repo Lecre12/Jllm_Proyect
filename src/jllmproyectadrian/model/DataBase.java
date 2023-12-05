@@ -313,7 +313,7 @@ public class DataBase {
         return message;
     }
     
-    public String locateLastTableAsDay(ArrayList<Conversation> lastConver){
+    /*public String locateLastTableAsDay(ArrayList<Conversation> lastConver){
         
         ResultSet rs = null;
         String tableName = null;
@@ -347,6 +347,39 @@ public class DataBase {
             
         }
         return null;
+    }*/
+    public String locateLastTableAsDay(ArrayList<Conversation> lastConver) {
+    ResultSet rs = null;
+    String tableName = null;
+
+    for (String table : getAllTablesNames()) {
+        try (Statement stmt = connection.createStatement()) {
+            String query = "SELECT '" + table + "' AS table_name " +
+                           "WHERE NOT EXISTS (SELECT * FROM lastConversation EXCEPT SELECT * FROM " + table + " UNION ALL SELECT * FROM " + table + " EXCEPT SELECT * FROM lastConversation)";
+            rs = stmt.executeQuery(query);
+
+            if (rs.next()) {
+                tableName = rs.getString("table_name");
+            }
+
+            if (tableName != null) {
+                return tableName;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
+    return null;
+}
+
     
 }
