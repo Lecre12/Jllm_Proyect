@@ -4,6 +4,7 @@
  */
 package jllmproyectadrian.model;
 
+import java.io.File;
 import java.sql.Connection; 
 import java.sql.Statement;
 import java.sql.*;
@@ -22,7 +23,7 @@ public class DataBase {
     public DataBase(){
         
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.home") + "\\Desktop\\JLLM\\conversations.db"); 
+            connection = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.home") + File.separator + "Desktop"+ File.separator +"JLLM"+ File.separator +"conversations.db"); 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -113,7 +114,7 @@ public class DataBase {
             Logger.getLogger(DataBase.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.home") + "\\Desktop\\JLLM\\conversations.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.home") + File.separator + "Desktop"+ File.separator +"JLLM"+ File.separator +"conversations.db");
             
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -179,12 +180,6 @@ public class DataBase {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        
-        /*try(PreparedStatement stmt = connection.prepareStatement("INSERT INTO lastConversation(message, answer, date, time, id)SELECT message, answer, date, time, id FROM" + epoch + ";");) {
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }*/
         
     }
     
@@ -276,7 +271,7 @@ public class DataBase {
             Logger.getLogger(DataBase.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.home") + "\\Desktop\\JLLM\\conversations.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.home") + File.separator + "Desktop"+ File.separator +"JLLM"+ File.separator +"conversations.db");
             
         } catch (SQLException e) {
             throw new RuntimeException(e);

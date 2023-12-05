@@ -6,6 +6,7 @@ package jllmproyectadrian.view;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -40,7 +41,7 @@ public class View {
     
     public void principalMenuNoInfo(boolean speak){
         
-        createFolderIfNotExists(Paths.get(System.getProperty("user.home") + "\\Desktop\\JLLM"));
+        createFolderIfNotExists(Paths.get(System.getProperty("user.home") + File.separator + "Desktop"+ File.separator +"JLLM"));
         
         System.out.println("Buenas, soy el chat jllm!");
         String option;
@@ -64,11 +65,12 @@ public class View {
             }else{
                 switch(option){
                     case "1":
-                    {
+                        s = new Saludes();
+                        rm = new RandomMessage();
                         if(option1Menu(speak) == 1){
                             return;
                         }
-                    }
+                    
                         break;
 
 
@@ -261,7 +263,7 @@ public class View {
         c.getDatabase().deleteLastConversation();
         System.out.println("Dime algo ☺(\"exit\" para salir y volver al menu):");
         
-        Path folderPath = Paths.get(System.getProperty("user.home") + "\\Desktop\\JLLM\\CSV_FILES");
+        Path folderPath = Paths.get(System.getProperty("user.home") + File.separator + "Desktop"+ File.separator +"JLLM"+ File.separator +"CSV_FILES");
         if(createFolderIfNotExists(folderPath)){
             System.out.println("Exito al crear carpeta");
         }
@@ -300,7 +302,13 @@ public class View {
                     c.createConversation(message, answer);
                 }
             }else{
-                System.out.println(answer=randomMessageCsv("afirmacion"));
+                int number = (int) (random() * 10);
+                if(number %2 == 0){
+                    System.out.println(answer=randomMessageCsv("afirmacion"));
+                }else{
+                    System.out.println(answer=randomMessageCsv("negacion"));
+                }
+                
                 if(!answer.equalsIgnoreCase("no encontrado")){
                     c.createConversation(message, answer);
                 }
@@ -315,7 +323,7 @@ public class View {
     public String randomMessageCsv(String type){
         
         String message = null;
-        Path messagesFilePath = Paths.get(System.getProperty("user.home") + "\\Desktop\\JLLM\\CSV_FILES\\input.csv");
+        Path messagesFilePath = Paths.get(System.getProperty("user.home") + File.separator + "Desktop" + File.separator + "JLLM"+ File.separator +"CSV_FILES"+ File.separator +"input.csv");
         String searchType = type;
         String searchNumber;
         searchNumber = ""+((int) (random() * 12));
@@ -351,25 +359,6 @@ public class View {
         }
         return message;
     }
-    
-    /*public String randomMessage(){
-        String message = null;
-        Path saludeFilePath = Paths.get(System.getProperty("user.home") + "\\Desktop\\JLLM\\CSV_FILES\\randomMessages.csv");
-        if(!saludeFilePath.toFile().exists()){
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(saludeFilePath.toFile()))) {
-            
-                for (int i = 0; i < s.getSaludesA().size(); i++) {
-                    writer.write(s.getSaludesA().get(i) + "\n");
-                }
-
-            }catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        
-        
-        return message;
-    }*/
     
     public void createConversation(){
         
@@ -791,6 +780,15 @@ public class View {
         }
         return 0;
         
+    }
+    
+    public void createFolder(){
+        
+        Path folderP = Paths.get(System.getProperty("user.home") + File.separator + "Desktop" + File.separator + "JLLM");
+        createFolderIfNotExists(folderP);
+        
+        folderP = Paths.get(System.getProperty("user.home") + File.separator + "Desktop" + File.separator + "JLLM" + File.separator + "CSV_FILES");
+        createFolderIfNotExists(folderP);
     }
    
 }

@@ -44,6 +44,7 @@ public class Main {
         }
         
         View view = new View();
+        view.createFolder();
         view.setModel(mode);
         view.initDataBase();
         
