@@ -29,15 +29,20 @@ import jllmproyectadrian.util.messages.Saludes;
  */
 public class View {
     
-    Controller c = new Controller();
-    Saludes s = new Saludes();
-    RandomMessage rm = new RandomMessage();
+    private int mode;
+    private Controller c = new Controller();
+    private Saludes s;
+    private RandomMessage rm;
+    
+    public void setModel(int mode){
+        this.mode = mode;
+    }
     
     public void initDataBase(){
         c.initDataBase();
     }
     
-    public void principalMenu(boolean speak){
+    public void principalMenuNoInfo(boolean speak){
         
         createFolderIfNotExists(Paths.get(System.getProperty("user.home") + "\\Desktop\\JLLM"));
         
@@ -64,15 +69,12 @@ public class View {
                 switch(option){
                     case "1":
                     {
-                        try {
-                            if(option1Menu(speak) == 1){
-                                return;
-                            }
-                        } catch (IOException ex) {
-                            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                        if(option1Menu(speak) == 1){
+                            return;
                         }
                     }
                         break;
+
 
                     case "2":
                         if(option2Menu(speak) == 1){
@@ -131,7 +133,7 @@ public class View {
         
     }
     
-    private int option1Menu(boolean speak) throws IOException{
+    private int option1Menu(boolean speak){
         
         boolean exit = false;
         String option;
@@ -203,7 +205,7 @@ public class View {
             if(speak){
             c.sayString("Seleccione lo que quiere realizar en la opcion Random_CSV_LLM:.1. Nuevo chat Random_CSV_LLM.2. Restaurar ultima conversacion realizada.3. Listar conversaciones anteriores.Introduzca el numero que quiere o \"exit\" para volver al anterior menu o \"exit all\" para salir completamente del programa");
             }
-            System.out.println("Seleccione lo que quiere realizar en la opcion Fake_LLM:");
+            System.out.println("Seleccione lo que quiere realizar en la opcion Random_CSV_LLM:");
             System.out.println("1. Nuevo chat Random_CSV_LLM");
             System.out.println("2. Restaurar ultima conversacion realizada");
             System.out.println("3. Listar conversaciones anteriores");
@@ -566,6 +568,230 @@ public class View {
         tableName = readMessageScan();
         
         return tableName;
+    }
+    
+    public void print(String text){
+        
+        System.out.println(text);
+        
+    }
+    
+    public void managerMenuMode(boolean speak){
+        if(this.mode == 1){
+            s = new Saludes();
+            rm = new RandomMessage();
+            menuMode1(speak);
+        }else{
+            menuMode2(speak);
+        }
+        System.out.println("Programa finalizado con exito");
+    }
+    
+    public int menuMode1(boolean speak){
+        boolean exit = false;
+        String option;
+        
+        while(!exit){
+            if(speak){
+            c.sayString("Seleccione lo que quiere realizar en la opcion Fake_LLM:.1. Nuevo chat Fake_LLM.2. Restaurar ultima conversacion realizada.3. Listar conversaciones anteriores.Introduzca el numero que quiere o \"exit\" para volver al anterior menu o \"exit all\" para salir completamente del programa");
+            }
+            System.out.println("Seleccione lo que quiere realizar en la opcion Fake_LLM:");
+            System.out.println("1. Nuevo chat Fake_LLM");
+            System.out.println("2. Restaurar ultima conversacion realizada");
+            System.out.println("3. Listar conversaciones anteriores");
+            System.out.println("4. Exportar una conversacion");
+            System.out.println("5. Importar una conversacion");
+            System.out.println("Introduzca el numero que quiere o \"exit\" para volver al anterior menu o \"exit all\" para salir completamente del programa");
+            
+            option = readMessageScan();
+            if(option.equalsIgnoreCase("exit all")){
+                    return 1;
+            }
+            if(option.equalsIgnoreCase("exit")){
+                exit = true;
+                c.removeAllInformation();
+                
+            }else{
+                switch(option){
+                    case "1":
+                        createConversation();
+                        break;
+                    case "2":
+                        String tableName = null;  
+                        tableName = c.getDatabase().locateLastTableAsDay(c.showLastConversation());
+                        System.out.println(tableName);
+                        c.deleteTable(tableName);
+                        for(Conversation conv : c.showLastConversation()){
+                            System.out.print("[Yo: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
+                                                + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
+                            System.out.println(conv.getMessage());
+                            System.out.print("[PROGRAMA: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
+                                                + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
+                            System.out.println(conv.getAnswer());
+                        }
+                        continueConversation(true, null);
+                        c.saveConversationAsDay(null);
+                        break;
+                    case "3":
+                        showAllConversations();
+                        int dev;
+                        do{
+                            dev = menuForDeleteTable(1);
+                            if(dev == 2){
+                                return 1;
+                            }
+                        }while(dev == -1);
+                        break;
+                    case "4":
+                        tableName = null;
+                        showAllConversations();
+                        tableName = menuForExport();
+                        if(tableName.toLowerCase().equalsIgnoreCase("exit")){
+                            break;
+                        }
+                        c.exportTable(tableName);
+                        break;
+                    case "5":
+                        boolean canExit = false;
+                        String tableNameReaded = null;
+                        do{
+                            System.out.println("Introduzca un titulo para su conversacion");
+                            tableNameReaded = readMessageScan();
+                            if(tableNameReaded == null){
+                                canExit = false;
+                                System.out.println("Tienes que poner un titulo para la conversacion");
+                            }else if(!tableNameReaded.startsWith("^[^0-9].*")){
+                                canExit = true;
+                            }else{
+                                tableNameReaded = "t" + tableNameReaded;
+                                canExit = true;
+                            }
+                            if(tableNameReaded.contains(" ")){
+                                tableNameReaded = tableNameReaded.replace(" ", "");
+                            }
+                        }while(!canExit);
+                        if(tableNameReaded.toLowerCase().equalsIgnoreCase("exit")){
+                            break;
+                        }
+                        c.importTable();
+                        if(c.getConversation() == null){
+                            System.out.println("[ERROR]: No hay ningun archivo en la carpeta de importacion");
+                        }else{
+                            c.saveConversationAsDay(tableNameReaded);
+                        }
+                        break;
+                    default:
+                        System.out.println("[ERROR] No se ha introducido ninguno de los tres números o exit...");
+                        break;
+                }
+            }
+        }
+        
+        return 0;
+    }
+    
+    public int menuMode2(boolean speak){
+        
+        boolean exit = false;
+        String option;
+        
+        while(!exit){
+            if(speak){
+            c.sayString("Seleccione lo que quiere realizar en la opcion Random_CSV_LLM:.1. Nuevo chat Random_CSV_LLM.2. Restaurar ultima conversacion realizada.3. Listar conversaciones anteriores.Introduzca el numero que quiere o \"exit\" para volver al anterior menu o \"exit all\" para salir completamente del programa");
+            }
+            System.out.println("Seleccione lo que quiere realizar en la opcion Random_CSV_LLM:");
+            System.out.println("1. Nuevo chat Random_CSV_LLM");
+            System.out.println("2. Restaurar ultima conversacion realizada");
+            System.out.println("3. Listar conversaciones anteriores");
+            System.out.println("4. Exportar una conversacion");
+            System.out.println("5. Importar una conversacion");
+            System.out.println("Introduzca el numero que quiere o \"exit\" para volver al anterior menu o \"exit all\" para salir completamente del programa");
+            
+            option = readMessageScan();
+            if(option.equalsIgnoreCase("exit all")){
+                    return 1;
+            }
+            if(option.equalsIgnoreCase("exit")){
+                exit = true;
+                c.removeAllInformation();
+            }else {
+                switch(option){
+                    case "1":
+                        createConversationCsv();
+                        break;
+                    case "2":
+                        String tableName = null;  
+                        tableName = c.getDatabase().locateLastTableAsDay(c.showLastConversation());
+                        System.out.println(tableName);
+                        c.deleteTable(tableName);
+                        for(Conversation conv : c.showLastConversation()){
+                            System.out.print("[Yo: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
+                                                + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
+                            System.out.println(conv.getMessage());
+                            System.out.print("[PROGRAMA: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
+                                                + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
+                            System.out.println(conv.getAnswer());
+                        }
+                        c.removeAllInformation();
+                        continueConversationCsv(true, null);
+                        c.saveConversationAsDay(null);
+                        break;
+                    case "3":
+                        showAllConversations();
+                        int dev;
+                        do{
+                            dev = menuForDeleteTable(2);
+                            if(dev == 2){
+                                return 1;
+                            }
+                        }while(dev == -1);
+                        break;
+                        case "4":
+                        tableName = null;
+                        showAllConversations();
+                        tableName = menuForExport();
+                        if(tableName.toLowerCase().equalsIgnoreCase("exit")){
+                            break;
+                        }
+                        c.exportTable(tableName);
+                        break;
+                    case "5":
+                        boolean canExit = false;
+                        String tableNameReaded = null;
+                        do{
+                            System.out.println("Introduzca un titulo para su conversacion");
+                            tableNameReaded = readMessageScan();
+                            if(tableNameReaded == null){
+                                canExit = false;
+                                System.out.println("Tienes que poner un titulo para la conversacion");
+                            }else if(!tableNameReaded.startsWith("^[^0-9].*")){
+                                canExit = true;
+                            }else{
+                                tableNameReaded = "t" + tableNameReaded;
+                                canExit = true;
+                            }
+                            if(tableNameReaded.contains(" ")){
+                                tableNameReaded = tableNameReaded.replace(" ", "");
+                            }
+                        }while(!canExit);
+                        if(tableNameReaded.toLowerCase().equalsIgnoreCase("exit")){
+                            break;
+                        }
+                        c.importTable();
+                        if(c.getConversation() == null){
+                            System.out.println("[ERROR]: No hay ningun archivo en la carpeta de importacion");
+                        }else{
+                            c.saveConversationAsDay(tableNameReaded);
+                        }
+                        break;
+                    default:
+                        System.out.println("[ERROR] No se ha introducido ninguno de los tres números o exit...");
+                        break;
+                }
+            }
+        }
+        return 0;
+        
     }
    
 }
