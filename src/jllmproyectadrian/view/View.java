@@ -226,17 +226,17 @@ public class View {
                         String tableName = null;  
                         tableName = c.getDatabase().locateLastTableAsDay(c.showLastConversation());
                         System.out.println(tableName);
-                        c.deleteTable(tableName);
-                        for(Conversation conv : c.showLastConversation()){
+                        //c.deleteTable(tableName);
+                        /*for(Conversation conv : c.showLastConversation()){
                             System.out.print("[Yo: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
                                                 + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
                             System.out.println(conv.getMessage());
                             System.out.print("[PROGRAMA: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
                                                 + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
                             System.out.println(conv.getAnswer());
-                        }
+                        }*/
                         c.removeAllInformation();
-                        continueConversationCsv(true, null);
+                        continueConversationCsv(true, tableName);
                         //c.saveConversationAsDay(null);
                         c.removeAllInformation();
                         break;
@@ -442,10 +442,8 @@ public class View {
             c.saveLastConversatio(c.getLastConversation());
             i++;
         }
-        //if(!comeFromLast){
             c.continueConversationAsDay(table);
             c.removeAllInformation();
-        //}
         
     }
     
@@ -501,9 +499,8 @@ public class View {
             c.saveLastConversatio(c.getLastConversation());
             i++;
         }
-        if(!comeFromLast){
-            c.continueConversationAsDay(table);
-        }
+        c.continueConversationAsDay(table);
+        c.removeAllInformation();
     }
     
     public void showAllConversations(){
@@ -635,17 +632,17 @@ public class View {
                         String tableName = null;  
                         tableName = c.getDatabase().locateLastTableAsDay(c.showLastConversation());
                         System.out.println(tableName);
-                        c.deleteTable(tableName);
-                        for(Conversation conv : c.showLastConversation()){
+                        /*for(Conversation conv : c.showLastConversation()){
                             System.out.print("[Yo: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
                                                 + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
                             System.out.println(conv.getMessage());
                             System.out.print("[PROGRAMA: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
                                                 + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
                             System.out.println(conv.getAnswer());
-                        }
-                        continueConversation(true, null);
-                        c.saveConversationAsDay(null);
+                        }*/
+                        //c.deleteTable(tableName);
+                        continueConversation(true, tableName);
+                        //c.saveConversationAsDay(null);
                         break;
                     case "3":
                         showAllConversations();
@@ -735,23 +732,22 @@ public class View {
                         createConversationCsv();
                         break;
                     case "2":
-                        String tableName = null;  
+                         String tableName = null;  
                         tableName = c.getDatabase().locateLastTableAsDay(c.showLastConversation());
                         System.out.println(tableName);
-                        c.deleteTable(tableName);
-                        for(Conversation conv : c.showLastConversation()){
+                        //c.deleteTable(tableName);
+                        /*for(Conversation conv : c.showLastConversation()){
                             System.out.print("[Yo: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
                                                 + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
                             System.out.println(conv.getMessage());
                             System.out.print("[PROGRAMA: " + conv.getConversationDay() + "/" + conv.getConversationMonth() + "/" + conv.getConversationYear() + " "
                                                 + conv.getConversationHour() + ":" + conv.getConversationMinute() + ":" + conv.getConversationSecond() + "]: ");
                             System.out.println(conv.getAnswer());
-                        }
+                        }*/
                         c.removeAllInformation();
-                        System.out.println("HOLA");
-                        continueConversationCsv(true, null);
-                        System.out.println("HOLA");
-                        c.saveConversationAsDay(null);
+                        continueConversationCsv(true, tableName);
+                        //c.saveConversationAsDay(null);
+                        c.removeAllInformation();
                         break;
                     case "3":
                         showAllConversations();
