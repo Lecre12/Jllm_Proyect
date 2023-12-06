@@ -24,7 +24,7 @@ hs_err_pid*
 replay_pid*
 
 # NetBeans specific #
-nbproject/private/
+nbproject/
 build/
 nbbuild/
 dist/
