@@ -16,10 +16,4 @@ public class MessageUtils {
         return message;
     }
     
-    public static String readAnswerCsv(){
-        String message;
-        message = "Mensaje de prueba";
-        return message;
-    }
-    
 }

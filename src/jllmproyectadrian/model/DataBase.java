@@ -31,7 +31,8 @@ public class DataBase {
         /*Create tables lastConversation if nor exists*/
         try {
             Statement stmt = connection.createStatement();
-            stmt.execute("CREATE TABLE IF NOT EXISTS lastConversation(message VARCHAR(100) NOT NULL, answer VARCHAR(100) NOT NULL, date VARCHAR(10) NOT NULL, time VARCHAR(10) NOT NULL, id INT NOT NULL, PRIMARY KEY(id, date, time));");
+            stmt.execute("CREATE TABLE IF NOT EXISTS lastConversation(message VARCHAR(100) NOT NULL, answer VARCHAR(100) NOT NULL, date VARCHAR(10) NOT NULL,"
+                    + " time VARCHAR(10) NOT NULL, id INT NOT NULL, PRIMARY KEY(id, date, time));");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -124,7 +125,8 @@ public class DataBase {
             PreparedStatement  stmt = connection.prepareStatement("DROP TABLE lastConversation");
             stmt.execute();
             Statement stmt1 = connection.createStatement();
-            stmt1.executeUpdate("CREATE TABLE IF NOT EXISTS lastConversation(message VARCHAR(100) NOT NULL, answer VARCHAR(100) NOT NULL, date VARCHAR(10) NOT NULL, time VARCHAR(10) NOT NULL, id INT NOT NULL, PRIMARY KEY(id, date, time));");
+            stmt1.executeUpdate("CREATE TABLE IF NOT EXISTS lastConversation(message VARCHAR(100) NOT NULL, answer VARCHAR(100) NOT NULL, date VARCHAR(10) NOT NULL,"
+                    + " time VARCHAR(10) NOT NULL, id INT NOT NULL, PRIMARY KEY(id, date, time));");
             
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -137,9 +139,11 @@ public class DataBase {
         long epoch = epoch = System.currentTimeMillis()/1000;;
         String create;
         if(tableName == null){
-            create = "CREATE TABLE t"+ epoch + "(message VARCHAR(100) NOT NULL, answer VARCHAR(100) NOT NULL, date VARCHAR(10) NOT NULL, time VARCHAR(10) NOT NULL, id INT NOT NULL, PRIMARY KEY(id, date, time));";
+            create = "CREATE TABLE t"+ epoch + "(message VARCHAR(100) NOT NULL, answer VARCHAR(100) NOT NULL, date VARCHAR(10) NOT NULL,"
+                    + " time VARCHAR(10) NOT NULL, id INT NOT NULL, PRIMARY KEY(id, date, time));";
         }else{
-            create = "CREATE TABLE t"+ tableName + "(message VARCHAR(100) NOT NULL, answer VARCHAR(100) NOT NULL, date VARCHAR(10) NOT NULL, time VARCHAR(10) NOT NULL, id INT NOT NULL, PRIMARY KEY(id, date, time));";
+            create = "CREATE TABLE t"+ tableName + "(message VARCHAR(100) NOT NULL, answer VARCHAR(100) NOT NULL, date VARCHAR(10) NOT NULL,"
+                    + " time VARCHAR(10) NOT NULL, id INT NOT NULL, PRIMARY KEY(id, date, time));";
         }
         
         
@@ -352,34 +356,35 @@ public class DataBase {
     ResultSet rs = null;
     String tableName = null;
 
-    for (String table : getAllTablesNames()) {
-        try (Statement stmt = connection.createStatement()) {
-            String query = "SELECT '" + table + "' AS table_name " +
-                           "WHERE NOT EXISTS (SELECT * FROM lastConversation EXCEPT SELECT * FROM " + table + " UNION ALL SELECT * FROM " + table + " EXCEPT SELECT * FROM lastConversation)";
-            rs = stmt.executeQuery(query);
+        for (String table : getAllTablesNames()) {
+            try (Statement stmt = connection.createStatement()) {
+                String query = "SELECT '" + table + "' AS table_name " +
+                               "WHERE NOT EXISTS (SELECT * FROM lastConversation EXCEPT SELECT * FROM " + table + " UNION ALL SELECT * FROM " +
+                                table + " EXCEPT SELECT * FROM lastConversation)";
+                rs = stmt.executeQuery(query);
 
-            if (rs.next()) {
-                tableName = rs.getString("table_name");
-            }
+                if (rs.next()) {
+                    tableName = rs.getString("table_name");
+                }
 
-            if (tableName != null) {
-                return tableName;
-            }
+                if (tableName != null) {
+                    return tableName;
+                }
 
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } finally {
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         }
-    }
     return null;
-}
+    }
 
     
 }
